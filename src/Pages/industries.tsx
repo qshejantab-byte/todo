@@ -2,9 +2,45 @@ import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { PageShell } from "@/components/PageShell";
-import { ArrowRight, Hotel, UtensilsCrossed, Building2, Plane, ShoppingBag, HeartPulse } from "lucide-react";
+import {
+  ArrowRight,
+  Hotel,
+  UtensilsCrossed,
+  Building2,
+  Plane,
+  ShoppingBag,
+  HeartPulse,
+  Sparkles,
+  Star,
+  MapPin,
+  BedDouble,
+  Coffee,
+  Utensils,
+  Home,
+  Camera,
+  ShoppingCart,
+  Stethoscope,
+} from "lucide-react";
 
-// ─── Industry definitions ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Responsive helper
+// ─────────────────────────────────────────────────────────────────────────────
+function useIsMobile(breakpoint = 900) {
+  const [mobile, setMobile] = useState(window.innerWidth <= breakpoint);
+
+  useEffect(() => {
+    const onResize = () => setMobile(window.innerWidth <= breakpoint);
+    window.addEventListener("resize", onResize);
+
+    return () => window.removeEventListener("resize", onResize);
+  }, [breakpoint]);
+
+  return mobile;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────────────────────────────────────
 interface Industry {
   id: string;
   index: string;
@@ -16,86 +52,147 @@ interface Industry {
   accent: string;
   glow: string;
   icon: React.ElementType;
-  visualPattern: "hospitality" | "restaurant" | "realestate" | "tourism" | "retail" | "clinic";
+  visualPattern:
+    | "hospitality"
+    | "restaurant"
+    | "realestate"
+    | "tourism"
+    | "retail"
+    | "clinic";
   flip?: boolean;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Data
+// ─────────────────────────────────────────────────────────────────────────────
 const INDUSTRIES: Industry[] = [
   {
     id: "hospitality",
     index: "01",
     name: "Hospitality",
     tagline: "Luxury presence for premium destinations.",
-    insight: "Hotels and lodges lose guests to competitors with stronger visual presence — not better rooms.",
-    painPoint: "Invisible online. Underbooked despite being exceptional.",
-    systems: ["Cinematic property reels", "Review & reputation workflow", "Content calendar system", "Direct booking content strategy"],
+    insight:
+      "Hotels and lodges lose guests to competitors with stronger visual presence — not better rooms.",
+    painPoint:
+      "Invisible online. Underbooked despite being exceptional.",
+    systems: [
+      "Cinematic property reels",
+      "Review & reputation workflow",
+      "Content calendar system",
+      "Direct booking content strategy",
+    ],
     accent: "#E8C547",
     glow: "rgba(232,197,71,0.15)",
     icon: Hotel,
     visualPattern: "hospitality",
   },
+
   {
     id: "restaurants",
     index: "02",
     name: "Restaurants & Cafés",
-    tagline: "Content that makes people hungry before they arrive.",
-    insight: "Food businesses that invest in visual storytelling fill tables 3× faster than those who don't.",
-    painPoint: "Inconsistent social presence. No system behind the content.",
-    systems: ["Dish & atmosphere reels", "Menu launch campaigns", "Reservation automation", "Review response templates"],
+    tagline:
+      "Content that makes people hungry before they arrive.",
+    insight:
+      "Food businesses that invest in visual storytelling fill tables 3× faster than those who don't.",
+    painPoint:
+      "Inconsistent social presence. No system behind the content.",
+    systems: [
+      "Dish & atmosphere reels",
+      "Menu launch campaigns",
+      "Reservation automation",
+      "Review response templates",
+    ],
     accent: "#E87D7D",
     glow: "rgba(232,125,125,0.15)",
     icon: UtensilsCrossed,
     visualPattern: "restaurant",
     flip: true,
   },
+
   {
     id: "realestate",
     index: "03",
     name: "Real Estate",
-    tagline: "Architectural storytelling that sells before the viewing.",
-    insight: "Properties with cinematic content sell 40% faster and attract higher-quality leads.",
-    painPoint: "Listings that look average. Leads that don't convert.",
-    systems: ["Cinematic walkthroughs", "Listing photography system", "Lead CRM & tracking", "Campaign creative"],
+    tagline:
+      "Architectural storytelling that sells before the viewing.",
+    insight:
+      "Properties with cinematic content sell 40% faster and attract higher-quality leads.",
+    painPoint:
+      "Listings that look average. Leads that don't convert.",
+    systems: [
+      "Cinematic walkthroughs",
+      "Listing photography system",
+      "Lead CRM & tracking",
+      "Campaign creative",
+    ],
     accent: "#5DD6B3",
     glow: "rgba(93,214,179,0.15)",
     icon: Building2,
     visualPattern: "realestate",
   },
+
   {
     id: "tourism",
     index: "04",
     name: "Tourism & Experiences",
-    tagline: "Turn experiences into unforgettable visual journeys.",
-    insight: "Travelers choose destinations based on digital emotion — what they feel before they book.",
-    painPoint: "Amazing experiences that look ordinary online.",
-    systems: ["Experience documentation", "Destination marketing content", "TripAdvisor reputation system", "Tour campaign creative"],
+    tagline:
+      "Turn experiences into unforgettable visual journeys.",
+    insight:
+      "Travelers choose destinations based on digital emotion — what they feel before they book.",
+    painPoint:
+      "Amazing experiences that look ordinary online.",
+    systems: [
+      "Experience documentation",
+      "Destination marketing content",
+      "TripAdvisor reputation system",
+      "Tour campaign creative",
+    ],
     accent: "#7DB8E8",
     glow: "rgba(125,184,232,0.15)",
     icon: Plane,
     visualPattern: "tourism",
     flip: true,
   },
+
   {
     id: "retail",
     index: "05",
     name: "Retail & E-commerce",
-    tagline: "Product content systems that drive consistent revenue.",
-    insight: "Brands with structured product content generate 2× more repeat purchases online.",
-    painPoint: "No posting system. Inconsistent product visibility.",
-    systems: ["Product content system", "Campaign creative library", "Structured posting calendar", "E-commerce content strategy"],
+    tagline:
+      "Product content systems that drive consistent revenue.",
+    insight:
+      "Brands with structured product content generate 2× more repeat purchases online.",
+    painPoint:
+      "No posting system. Inconsistent product visibility.",
+    systems: [
+      "Product content system",
+      "Campaign creative library",
+      "Structured posting calendar",
+      "E-commerce content strategy",
+    ],
     accent: "#C8A8E9",
     glow: "rgba(200,168,233,0.15)",
     icon: ShoppingBag,
     visualPattern: "retail",
   },
+
   {
     id: "clinics",
     index: "06",
     name: "Clinics & Services",
-    tagline: "Trust-first presence for care-focused businesses.",
-    insight: "Patients choose clinics based on trust signals — reviews, tone, and digital credibility.",
-    painPoint: "Low online visibility. Reputation not actively managed.",
-    systems: ["Trust-first brand system", "Review reminder automation", "Calendar coordination", "Educational content strategy"],
+    tagline:
+      "Trust-first presence for care-focused businesses.",
+    insight:
+      "Patients choose clinics based on trust signals — reviews, tone, and digital credibility.",
+    painPoint:
+      "Low online visibility. Reputation not actively managed.",
+    systems: [
+      "Trust-first brand system",
+      "Review reminder automation",
+      "Calendar coordination",
+      "Educational content strategy",
+    ],
     accent: "#5DD6B3",
     glow: "rgba(93,214,179,0.15)",
     icon: HeartPulse,
@@ -104,444 +201,1081 @@ const INDUSTRIES: Industry[] = [
   },
 ];
 
-// ─── Visual environments per industry ────────────────────────────────────────
-function IndustryVisual({ pattern, accent, glow }: { pattern: Industry["visualPattern"]; accent: string; glow: string }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rafRef    = useRef<number>(0);
-  const startRef  = useRef<number>(performance.now());
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    const resize = () => {
-      const r = canvas.getBoundingClientRect();
-      canvas.width  = r.width  * dpr;
-      canvas.height = r.height * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(canvas);
-
-    const [ar, ag, ab] = [
-      parseInt(accent.slice(1,3),16),
-      parseInt(accent.slice(3,5),16),
-      parseInt(accent.slice(5,7),16),
-    ];
-    const col = (a: number) => `rgba(${ar},${ag},${ab},${a})`;
-
-    const draw = (now: number) => {
-      const dpr2 = window.devicePixelRatio || 1;
-      const W = canvas.width / dpr2;
-      const H = canvas.height / dpr2;
-      const t = (now - startRef.current) / 1000;
-      ctx.clearRect(0, 0, W, H);
-
-      if (pattern === "hospitality") {
-        // Elegant slow-breathing concentric rings
-        for (let i = 0; i < 5; i++) {
-          const r = (80 + i * 55) + Math.sin(t * 0.4 + i * 0.6) * 10;
-          ctx.beginPath();
-          ctx.arc(W * 0.5, H * 0.5, r, 0, Math.PI * 2);
-          ctx.strokeStyle = col(0.06 - i * 0.01);
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
-        // Slow orbiting particles
-        for (let i = 0; i < 8; i++) {
-          const angle = t * 0.2 + (i * Math.PI * 2) / 8;
-          const r = 130 + Math.sin(t * 0.3 + i) * 20;
-          const x = W * 0.5 + Math.cos(angle) * r;
-          const y = H * 0.5 + Math.sin(angle) * r * 0.55;
-          ctx.beginPath();
-          ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = col(0.5 + Math.sin(t + i) * 0.3);
-          ctx.shadowColor = accent;
-          ctx.shadowBlur = 8;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        }
-        // Centre glow
-        const g = ctx.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,160);
-        g.addColorStop(0, col(0.12)); g.addColorStop(1, col(0));
-        ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
-      }
-
-      else if (pattern === "restaurant") {
-        // Dynamic energetic grid
-        const cols = 8, rows = 6;
-        for (let x = 0; x < cols; x++) {
-          for (let y = 0; y < rows; y++) {
-            const cx = (x / cols + 0.5 / cols) * W;
-            const cy = (y / rows + 0.5 / rows) * H;
-            const wave = Math.sin(t * 1.2 + x * 0.8 + y * 0.6) * 0.5 + 0.5;
-            if (wave > 0.55) {
-              ctx.beginPath();
-              ctx.arc(cx, cy, 3 + wave * 5, 0, Math.PI * 2);
-              ctx.fillStyle = col(wave * 0.4);
-              ctx.fill();
-            }
-          }
-        }
-        // Fast diagonal lines
-        for (let i = 0; i < 5; i++) {
-          const progress = ((t * 0.5 + i * 0.2) % 1);
-          ctx.beginPath();
-          ctx.moveTo(progress * W * 1.5 - W * 0.25, 0);
-          ctx.lineTo(progress * W * 1.5 - W * 0.25 - H * 0.6, H);
-          ctx.strokeStyle = col(0.06);
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
-      }
-
-      else if (pattern === "realestate") {
-        // Structural grid lines
-        const step = 40;
-        for (let x = 0; x < W; x += step) {
-          ctx.beginPath();
-          ctx.moveTo(x, 0); ctx.lineTo(x, H);
-          ctx.strokeStyle = col(0.05);
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-        for (let y = 0; y < H; y += step) {
-          ctx.beginPath();
-          ctx.moveTo(0, y); ctx.lineTo(W, y);
-          ctx.strokeStyle = col(0.05);
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-        // Architectural rectangle outlines
-        for (let i = 0; i < 3; i++) {
-          const phase = t * 0.15 + i * 0.3;
-          const s = 0.55 + Math.sin(phase) * 0.05;
-          const rw = W * s; const rh = H * s * 0.7;
-          ctx.beginPath();
-          ctx.rect((W - rw) / 2, (H - rh) / 2, rw, rh);
-          ctx.strokeStyle = col(0.1 - i * 0.03);
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-        }
-        // Corner dots
-        const corners = [[W*.2,H*.2],[W*.8,H*.2],[W*.8,H*.8],[W*.2,H*.8]];
-        corners.forEach(([cx,cy],i) => {
-          ctx.beginPath();
-          ctx.arc(cx,cy, 3 + Math.sin(t*0.6+i)*1.5,0,Math.PI*2);
-          ctx.fillStyle = col(0.6);
-          ctx.shadowColor = accent; ctx.shadowBlur = 10;
-          ctx.fill(); ctx.shadowBlur = 0;
-        });
-      }
-
-      else if (pattern === "tourism") {
-        // Flowing wave lines
-        for (let i = 0; i < 6; i++) {
-          ctx.beginPath();
-          for (let x = 0; x <= W; x += 4) {
-            const y = H * 0.5 + Math.sin(x / W * Math.PI * 2 + t * 0.7 + i * 0.5) * (30 + i * 15);
-            if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-          }
-          ctx.strokeStyle = col(0.07 - i * 0.01);
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-        }
-        // Floating star particles
-        for (let i = 0; i < 20; i++) {
-          const bx = ((i * 137.5) % 1) * W;
-          const by = ((i * 97.3)  % 1) * H;
-          const py = by + Math.sin(t * 0.4 + i) * 12;
-          const alpha = 0.3 + Math.sin(t * 0.5 + i * 0.7) * 0.25;
-          ctx.beginPath();
-          ctx.arc(bx, py, 1.5, 0, Math.PI * 2);
-          ctx.fillStyle = col(alpha);
-          ctx.fill();
-        }
-      }
-
-      else if (pattern === "retail") {
-        // Bouncing product grid
-        for (let i = 0; i < 12; i++) {
-          const bx = ((i * 83.1) % 1) * W;
-          const by = ((i * 61.7) % 1) * H;
-          const py = by + Math.sin(t * 0.8 + i * 0.4) * 8;
-          const s  = 12 + Math.sin(t * 0.6 + i) * 4;
-          ctx.strokeRect(bx - s/2, py - s/2, s, s);
-          ctx.strokeStyle = col(0.15 + Math.sin(t + i) * 0.08);
-          ctx.lineWidth = 0.8;
-          ctx.strokeRect(bx - s/2, py - s/2, s, s);
-        }
-        // Diagonal shimmer band
-        const shimmerX = ((t * 0.3) % 1.5) * W - W * 0.25;
-        const sg = ctx.createLinearGradient(shimmerX, 0, shimmerX + 80, H);
-        sg.addColorStop(0, col(0)); sg.addColorStop(0.5, col(0.06)); sg.addColorStop(1, col(0));
-        ctx.fillStyle = sg; ctx.fillRect(0, 0, W, H);
-      }
-
-      else if (pattern === "clinic") {
-        // Calm precise crosshairs
-        ctx.beginPath();
-        ctx.moveTo(W*.5, 0); ctx.lineTo(W*.5, H);
-        ctx.strokeStyle = col(0.05); ctx.lineWidth = 0.5; ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(0, H*.5); ctx.lineTo(W, H*.5);
-        ctx.strokeStyle = col(0.05); ctx.lineWidth = 0.5; ctx.stroke();
-        // Expanding soft rings (slow)
-        for (let i = 0; i < 4; i++) {
-          const phase = (t * 0.25 + i * 0.25) % 1;
-          ctx.beginPath();
-          ctx.arc(W*.5, H*.5, phase * 180, 0, Math.PI * 2);
-          ctx.strokeStyle = col(0.12 * (1 - phase));
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
-        // Gentle centre dot
-        const cg = ctx.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,60);
-        cg.addColorStop(0,col(0.2)); cg.addColorStop(1,col(0));
-        ctx.fillStyle = cg; ctx.beginPath();
-        ctx.arc(W*.5,H*.5,60,0,Math.PI*2); ctx.fill();
-      }
-
-      rafRef.current = requestAnimationFrame(draw);
-    };
-
-    rafRef.current = requestAnimationFrame(draw);
-    return () => { cancelAnimationFrame(rafRef.current); ro.disconnect(); };
-  }, [pattern, accent]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{ width:"100%", height:"100%", display:"block", opacity:0.85 }}
-    />
-  );
-}
-
-// ─── Fade-in on scroll hook ───────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Fade hook
+// ─────────────────────────────────────────────────────────────────────────────
 function useFadeIn() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
       { threshold: 0.15 }
     );
+
     obs.observe(el);
+
     return () => obs.disconnect();
   }, []);
+
   return { ref, visible };
 }
 
-// ─── Industry Section ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Visual block
+// ─────────────────────────────────────────────────────────────────────────────
+function IndustryVisual({
+  industry,
+}: {
+  industry: Industry;
+}) {
+  const isMobile = useIsMobile();
+
+  const sharedCard = {
+    position: "absolute" as const,
+    borderRadius: "24px",
+    border: "1px solid rgba(255,255,255,0.08)",
+    background: "rgba(255,255,255,0.04)",
+    backdropFilter: "blur(16px)",
+    overflow: "hidden",
+    boxShadow: `0 20px 60px ${industry.accent}15`,
+  };
+
+  const imageOverlay = {
+    position: "absolute" as const,
+    inset: 0,
+    background:
+      "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(8,10,18,0.82) 100%)",
+  };
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Hospitality
+  // ───────────────────────────────────────────────────────────────────────────
+  if (industry.visualPattern === "hospitality") {
+    return (
+      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        <div
+          style={{
+            ...sharedCard,
+            top: isMobile ? "6%" : "8%",
+            left: isMobile ? "5%" : "10%",
+            width: isMobile ? "90%" : "72%",
+            height: isMobile ? "58%" : "70%",
+          }}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1600&auto=format&fit=crop"
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+
+          <div style={imageOverlay} />
+
+          <div
+            style={{
+              position: "absolute",
+              left: "1.3rem",
+              bottom: "1.3rem",
+              right: "1.3rem",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: "6px",
+                marginBottom: "0.7rem",
+              }}
+            >
+              {[1, 2, 3, 4, 5].map((s) => (
+                <Star
+                  key={s}
+                  size={13}
+                  fill={industry.accent}
+                  color={industry.accent}
+                />
+              ))}
+            </div>
+
+            <div
+              style={{
+                color: "#fff",
+                fontFamily: "Space Grotesk",
+                fontWeight: 700,
+                fontSize: isMobile ? "1rem" : "1.2rem",
+              }}
+            >
+              Premium resort presentation
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            ...sharedCard,
+            bottom: isMobile ? "6%" : "10%",
+            right: isMobile ? "6%" : "12%",
+            padding: "1rem",
+            width: isMobile ? "170px" : "240px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              gap: "0.7rem",
+              alignItems: "center",
+            }}
+          >
+            <BedDouble size={18} color={industry.accent} />
+
+            <div>
+              <div
+                style={{
+                  color: "#fff",
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  fontFamily: "Space Grotesk",
+                }}
+              >
+                Direct bookings up
+              </div>
+
+              <div
+                style={{
+                  color: "rgba(255,255,255,0.45)",
+                  fontSize: "0.72rem",
+                }}
+              >
+                Reputation + cinematic content
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Restaurant
+  // ───────────────────────────────────────────────────────────────────────────
+  if (industry.visualPattern === "restaurant") {
+    return (
+      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        <div
+          style={{
+            ...sharedCard,
+            top: isMobile ? "8%" : "10%",
+            left: isMobile ? "6%" : "8%",
+            width: isMobile ? "88%" : "70%",
+            height: isMobile ? "68%" : "76%",
+            transform: "rotate(-3deg)",
+          }}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1600&auto=format&fit=crop"
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+
+          <div style={imageOverlay} />
+
+          <div
+            style={{
+              position: "absolute",
+              bottom: "1.2rem",
+              left: "1.2rem",
+              right: "1.2rem",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: "0.5rem",
+                marginBottom: "0.8rem",
+              }}
+            >
+              <Coffee size={16} color={industry.accent} />
+              <Utensils size={16} color={industry.accent} />
+            </div>
+
+            <div
+              style={{
+                color: "#fff",
+                fontWeight: 700,
+                fontFamily: "Space Grotesk",
+                fontSize: isMobile ? "1rem" : "1.2rem",
+              }}
+            >
+              Atmosphere that sells online
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            ...sharedCard,
+            right: isMobile ? "5%" : "8%",
+            bottom: isMobile ? "5%" : "10%",
+            padding: "1rem",
+            width: isMobile ? "180px" : "260px",
+          }}
+        >
+          <div
+            style={{
+              color: industry.accent,
+              fontSize: "0.65rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              marginBottom: "0.5rem",
+              fontFamily: "Space Mono",
+            }}
+          >
+            Reservation flow
+          </div>
+
+          <div
+            style={{
+              height: "6px",
+              borderRadius: "999px",
+              background: "rgba(255,255,255,0.08)",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: "72%",
+                height: "100%",
+                background: industry.accent,
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Real estate
+  // ───────────────────────────────────────────────────────────────────────────
+  if (industry.visualPattern === "realestate") {
+    return (
+      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        <div
+          style={{
+            ...sharedCard,
+            inset: isMobile ? "8%" : "10%",
+          }}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop"
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+
+          <div style={imageOverlay} />
+
+          <div
+            style={{
+              position: "absolute",
+              left: "1.3rem",
+              right: "1.3rem",
+              bottom: "1.3rem",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              gap: "1rem",
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontFamily: "Space Grotesk",
+                  fontSize: isMobile ? "1rem" : "1.3rem",
+                  marginBottom: "0.4rem",
+                }}
+              >
+                High-conversion property media
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.45rem",
+                  alignItems: "center",
+                  color: "rgba(255,255,255,0.55)",
+                  fontSize: "0.8rem",
+                }}
+              >
+                <MapPin size={14} />
+                Kigali · Luxury Listing
+              </div>
+            </div>
+
+            <div
+              style={{
+                padding: "0.7rem 0.9rem",
+                borderRadius: "14px",
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <Home size={18} color={industry.accent} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Tourism
+  // ───────────────────────────────────────────────────────────────────────────
+  if (industry.visualPattern === "tourism") {
+    return (
+      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        <div
+          style={{
+            ...sharedCard,
+            top: isMobile ? "10%" : "8%",
+            left: isMobile ? "5%" : "8%",
+            width: isMobile ? "90%" : "76%",
+            height: isMobile ? "72%" : "78%",
+          }}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1600&auto=format&fit=crop"
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+
+          <div style={imageOverlay} />
+
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(135deg, rgba(125,184,232,0.05), transparent)",
+            }}
+          />
+
+          <div
+            style={{
+              position: "absolute",
+              left: "1.4rem",
+              bottom: "1.4rem",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: "0.7rem",
+                marginBottom: "0.8rem",
+              }}
+            >
+              <Plane size={18} color="#fff" />
+              <Camera size={18} color="#fff" />
+            </div>
+
+            <div
+              style={{
+                color: "#fff",
+                fontWeight: 700,
+                fontFamily: "Space Grotesk",
+                fontSize: isMobile ? "1rem" : "1.25rem",
+                marginBottom: "0.35rem",
+              }}
+            >
+              Destination storytelling
+            </div>
+
+            <div
+              style={{
+                color: "rgba(255,255,255,0.58)",
+                fontSize: "0.82rem",
+              }}
+            >
+              Emotion-first travel marketing
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Retail
+  // ───────────────────────────────────────────────────────────────────────────
+  if (industry.visualPattern === "retail") {
+    return (
+      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        <div
+          style={{
+            position: "absolute",
+            inset: isMobile ? "10%" : "12%",
+            display: "grid",
+            gridTemplateColumns: "repeat(2,1fr)",
+            gap: isMobile ? "0.8rem" : "1rem",
+          }}
+        >
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              style={{
+                ...sharedCard,
+                position: "relative",
+                inset: "unset",
+                minHeight: isMobile ? "120px" : "180px",
+              }}
+            >
+              <img
+                src={`https://images.unsplash.com/photo-${
+                  i === 1
+                    ? "1523381210434-271e8be1f52b"
+                    : i === 2
+                    ? "1521572163474-6864f9cf17ab"
+                    : i === 3
+                    ? "1542291026-7eec264c27ff"
+                    : "1483985988355-763728e1935b"
+                }?q=80&w=1000&auto=format&fit=crop`}
+                alt=""
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+
+              <div style={imageOverlay} />
+
+              <div
+                style={{
+                  position: "absolute",
+                  left: "0.9rem",
+                  bottom: "0.9rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.45rem",
+                }}
+              >
+                <ShoppingCart
+                  size={14}
+                  color={industry.accent}
+                />
+
+                <span
+                  style={{
+                    color: "#fff",
+                    fontWeight: 600,
+                    fontSize: "0.76rem",
+                  }}
+                >
+                  Product Content
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Clinic
+  // ───────────────────────────────────────────────────────────────────────────
+  return (
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <div
+        style={{
+          ...sharedCard,
+          inset: isMobile ? "10%" : "12%",
+        }}
+      >
+        <img
+          src="https://images.unsplash.com/photo-1584982751601-97dcc096659c?q=80&w=1600&auto=format&fit=crop"
+          alt=""
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+
+        <div style={imageOverlay} />
+
+        <div
+          style={{
+            position: "absolute",
+            left: "1.3rem",
+            right: "1.3rem",
+            bottom: "1.3rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            <div
+              style={{
+                color: "#fff",
+                fontWeight: 700,
+                fontFamily: "Space Grotesk",
+                fontSize: isMobile ? "1rem" : "1.2rem",
+                marginBottom: "0.4rem",
+              }}
+            >
+              Trust-first patient experience
+            </div>
+
+            <div
+              style={{
+                color: "rgba(255,255,255,0.55)",
+                fontSize: "0.82rem",
+              }}
+            >
+              Reviews · Education · Visibility
+            </div>
+          </div>
+
+          <div
+            style={{
+              width: "52px",
+              height: "52px",
+              borderRadius: "18px",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Stethoscope
+              size={22}
+              color={industry.accent}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Section
+// ─────────────────────────────────────────────────────────────────────────────
 function IndustrySection({ ind }: { ind: Industry }) {
   const { ref, visible } = useFadeIn();
   const Icon = ind.icon;
+  const isMobile = useIsMobile();
 
   const copy = (
-    <div style={{
-      display:"flex", flexDirection:"column", justifyContent:"center",
-      padding:"4rem 3rem",
-      opacity: visible ? 1 : 0,
-      transform: visible ? "none" : `translateX(${ind.flip ? "30px" : "-30px"})`,
-      transition: "opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1)",
-    }}>
-      {/* Index + icon */}
-      <div style={{ display:"flex", alignItems:"center", gap:"1rem", marginBottom:"2rem" }}>
-        <div style={{ width:"44px", height:"44px", borderRadius:"12px",
-          background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)",
-          display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-          <Icon size={20} color={ind.accent} />
+    <div
+      style={{
+        padding: isMobile ? "3rem 1.4rem" : "5rem 4rem",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        position: "relative",
+        zIndex: 2,
+        opacity: visible ? 1 : 0,
+        transform: visible
+          ? "translateY(0px)"
+          : "translateY(30px)",
+        transition:
+          "opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1)",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1rem",
+          marginBottom: "1.8rem",
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            width: isMobile ? "42px" : "52px",
+            height: isMobile ? "42px" : "52px",
+            borderRadius: "16px",
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          <Icon size={isMobile ? 18 : 22} color={ind.accent} />
         </div>
-        <span style={{ fontFamily:"Space Mono,monospace", fontSize:"0.55rem",
-          letterSpacing:"0.22em", textTransform:"uppercase",
-          color:"rgba(245,245,240,0.28)" }}>
-          {ind.index} — Industry
+
+        <span
+          style={{
+            fontFamily: "Space Mono, monospace",
+            fontSize: "0.58rem",
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+            color: "rgba(245,245,240,0.35)",
+          }}
+        >
+          {ind.index} — Industry System
         </span>
       </div>
 
-      {/* Name */}
-      <h2 style={{ fontFamily:"Space Grotesk,sans-serif", fontWeight:800,
-        fontSize:"clamp(2.2rem,4vw,3.8rem)", lineHeight:0.95,
-        letterSpacing:"-0.045em", color:"#f5f5f0", marginBottom:"0.75rem" }}>
+      <h2
+        style={{
+          fontFamily: "Space Grotesk, sans-serif",
+          fontWeight: 800,
+          fontSize: isMobile
+            ? "clamp(2rem,10vw,3rem)"
+            : "clamp(3rem,5vw,5rem)",
+          lineHeight: 0.92,
+          letterSpacing: "-0.05em",
+          color: "#f5f5f0",
+          marginBottom: "1rem",
+          maxWidth: "14ch",
+        }}
+      >
         {ind.name}
       </h2>
 
-      {/* Tagline */}
-      <p style={{ fontFamily:"Space Grotesk,sans-serif", fontWeight:400,
-        fontStyle:"italic", fontSize:"1.05rem", lineHeight:1.5,
-        color: ind.accent, marginBottom:"1.75rem" }}>
+      <p
+        style={{
+          color: ind.accent,
+          fontFamily: "Space Grotesk, sans-serif",
+          fontStyle: "italic",
+          fontSize: isMobile ? "0.95rem" : "1.1rem",
+          lineHeight: 1.6,
+          marginBottom: "1.5rem",
+          maxWidth: "34rem",
+        }}
+      >
         {ind.tagline}
       </p>
 
-      {/* Insight */}
-      <p style={{ fontFamily:"Space Grotesk,sans-serif", fontSize:"0.9rem",
-        lineHeight:1.8, color:"rgba(245,245,240,0.55)", marginBottom:"1rem",
-        maxWidth:"28rem" }}>
+      <p
+        style={{
+          fontFamily: "Space Grotesk, sans-serif",
+          fontSize: isMobile ? "0.9rem" : "0.98rem",
+          lineHeight: 1.9,
+          color: "rgba(245,245,240,0.55)",
+          maxWidth: "36rem",
+          marginBottom: "1.4rem",
+        }}
+      >
         {ind.insight}
       </p>
 
-      {/* Pain point */}
-      <div style={{ display:"flex", alignItems:"flex-start", gap:"10px",
-        padding:"0.9rem 1.1rem", borderRadius:"10px",
-        background:"rgba(255,255,255,0.03)",
-        border:"1px solid rgba(255,255,255,0.07)",
-        marginBottom:"2rem", maxWidth:"28rem" }}>
-        <span style={{ width:"6px", height:"6px", borderRadius:"50%", flexShrink:0,
-          marginTop:"6px", background:ind.accent }} />
-        <span style={{ fontFamily:"Space Grotesk,sans-serif", fontSize:"0.82rem",
-          fontStyle:"italic", color:"rgba(245,245,240,0.45)", lineHeight:1.6 }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "12px",
+          alignItems: "flex-start",
+          background: "rgba(255,255,255,0.03)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          padding: isMobile ? "1rem" : "1.15rem",
+          borderRadius: "18px",
+          marginBottom: "2rem",
+          maxWidth: "36rem",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        <Sparkles
+          size={16}
+          color={ind.accent}
+          style={{ marginTop: "2px", flexShrink: 0 }}
+        />
+
+        <span
+          style={{
+            fontFamily: "Space Grotesk, sans-serif",
+            color: "rgba(245,245,240,0.48)",
+            lineHeight: 1.7,
+            fontSize: "0.85rem",
+          }}
+        >
           {ind.painPoint}
         </span>
       </div>
 
-      {/* Systems */}
-      <div style={{ display:"flex", flexWrap:"wrap", gap:"0.5rem", marginBottom:"2.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "0.65rem",
+          marginBottom: "2.5rem",
+        }}
+      >
         {ind.systems.map((s) => (
-          <span key={s} style={{
-            fontFamily:"Space Mono,monospace", fontSize:"0.55rem",
-            letterSpacing:"0.1em", textTransform:"uppercase",
-            color:"rgba(245,245,240,0.55)", background:"rgba(255,255,255,0.04)",
-            border:"1px solid rgba(255,255,255,0.08)",
-            padding:"0.3rem 0.75rem", borderRadius:"4px",
-          }}>
+          <div
+            key={s}
+            style={{
+              padding: isMobile
+                ? "0.5rem 0.7rem"
+                : "0.55rem 0.9rem",
+              borderRadius: "999px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.03)",
+              color: "rgba(245,245,240,0.62)",
+              fontFamily: "Space Mono, monospace",
+              fontSize: "0.56rem",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+            }}
+          >
             {s}
-          </span>
+          </div>
         ))}
       </div>
 
-      {/* CTA */}
       <Link
         to="/discovery"
         style={{
-          display:"inline-flex", alignItems:"center", gap:"8px",
-          fontFamily:"Space Grotesk,sans-serif", fontWeight:700,
-          fontSize:"0.72rem", letterSpacing:"0.08em", textTransform:"uppercase",
-          textDecoration:"none", color:"#5DD6B3",
-          border:"none", borderBottom:"1px solid rgba(93,214,179,0.35)",
-          paddingBottom:"3px", width:"fit-content",
-          transition:"all .25s cubic-bezier(.22,1,.36,1)",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.color = "#f5f5f0";
-          e.currentTarget.style.borderColor = "#5DD6B3";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.color = "#5DD6B3";
-          e.currentTarget.style.borderColor = "rgba(93,214,179,0.35)";
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "10px",
+          width: "fit-content",
+          textDecoration: "none",
+          padding: isMobile
+            ? "0.9rem 1.2rem"
+            : "1rem 1.5rem",
+          borderRadius: "999px",
+          background: ind.accent,
+          color: "#0d0f1a",
+          fontFamily: "Space Grotesk, sans-serif",
+          fontWeight: 700,
+          fontSize: "0.72rem",
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          boxShadow: `0 0 32px ${ind.accent}40`,
         }}
       >
-        Start a conversation <ArrowRight size={13} />
+        Start a conversation <ArrowRight size={14} />
       </Link>
     </div>
   );
 
   const visual = (
-    <div style={{
-      position:"relative", minHeight:"420px",
-      background:`radial-gradient(circle at 50% 50%, ${ind.glow} 0%, rgba(13,15,26,0.5) 70%)`,
-      overflow:"hidden",
-      opacity: visible ? 1 : 0,
-      transform: visible ? "none" : `translateX(${ind.flip ? "-30px" : "30px"})`,
-      transition: "opacity .9s .1s cubic-bezier(.22,1,.36,1), transform .9s .1s cubic-bezier(.22,1,.36,1)",
-    }}>
-      <IndustryVisual pattern={ind.visualPattern} accent={ind.accent} glow={ind.glow} />
-      {/* Index watermark */}
-      <div style={{ position:"absolute", bottom:"1.5rem", right:"1.5rem",
-        fontFamily:"Space Mono,monospace", fontSize:"4rem", fontWeight:700,
-        color:`${ind.accent}10`, lineHeight:1, userSelect:"none" }}>
+    <div
+      style={{
+        position: "relative",
+        minHeight: isMobile ? "420px" : "760px",
+        overflow: "hidden",
+        background: `
+          radial-gradient(circle at 50% 50%, ${ind.glow} 0%, transparent 70%),
+          linear-gradient(180deg, rgba(255,255,255,0.02), transparent)
+        `,
+        borderLeft: isMobile
+          ? "none"
+          : "1px solid rgba(255,255,255,0.05)",
+        borderBottom: isMobile
+          ? "1px solid rgba(255,255,255,0.05)"
+          : "none",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `
+            radial-gradient(circle at 20% 20%, ${ind.accent}12 0%, transparent 35%),
+            radial-gradient(circle at 80% 80%, ${ind.accent}10 0%, transparent 35%)
+          `,
+        }}
+      />
+
+      <IndustryVisual industry={ind} />
+
+      <div
+        style={{
+          position: "absolute",
+          right: isMobile ? "1rem" : "2rem",
+          bottom: isMobile ? "1rem" : "2rem",
+          fontSize: isMobile ? "4rem" : "8rem",
+          fontWeight: 800,
+          fontFamily: "Space Grotesk, sans-serif",
+          color: `${ind.accent}10`,
+          lineHeight: 1,
+          userSelect: "none",
+          zIndex: 5,
+        }}
+      >
         {ind.index}
       </div>
     </div>
   );
 
   return (
-    <div
+    <section
       ref={ref}
       style={{
-        display:"grid",
-        gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",
-        borderTop:"1px solid rgba(255,255,255,0.05)",
+        display: "grid",
+        gridTemplateColumns: isMobile
+          ? "1fr"
+          : "1fr 1fr",
+        borderTop: "1px solid rgba(255,255,255,0.05)",
+        background: "#0d0f1a",
       }}
     >
-      {ind.flip ? <>{visual}{copy}</> : <>{copy}{visual}</>}
-    </div>
+      {isMobile ? (
+        <>
+          {visual}
+          {copy}
+        </>
+      ) : ind.flip ? (
+        <>
+          {visual}
+          {copy}
+        </>
+      ) : (
+        <>
+          {copy}
+          {visual}
+        </>
+      )}
+    </section>
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Page
+// ─────────────────────────────────────────────────────────────────────────────
 export default function IndustriesPage() {
+  const isMobile = useIsMobile();
+
   return (
     <PageShell>
       <Helmet>
         <title>Industries — TODO Growth</title>
-        <meta name="description" content="Brand, content, and AI workflows for hospitality, restaurants, real estate, tourism, retail, and clinics across East Africa." />
 
+        <meta
+          name="description"
+          content="Brand, content, and AI workflows for hospitality, restaurants, real estate, tourism, retail, and clinics across East Africa."
+        />
       </Helmet>
 
-      {/* ── INDUSTRY SECTIONS ──────────────────────────────────── */}
-      <div style={{ background:"#0d0f1a" }}>
-        {INDUSTRIES.map((ind) => (
-          <div key={ind.id} id={ind.id}>
-            <IndustrySection ind={ind} />
+      {/* HERO */}
+      <section
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          background:
+            "linear-gradient(180deg,#0b0d17 0%,#0d0f1a 100%)",
+          padding: isMobile
+            ? "6rem 1.25rem 4rem"
+            : "9rem 2rem 6rem",
+          borderBottom:
+            "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            overflow: "hidden",
+            pointerEvents: "none",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              width: "50vw",
+              height: "50vw",
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle,rgba(93,214,179,0.08),transparent 70%)",
+              top: "-10%",
+              left: "-10%",
+            }}
+          />
+
+          <div
+            style={{
+              position: "absolute",
+              width: "40vw",
+              height: "40vw",
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle,rgba(232,197,71,0.06),transparent 70%)",
+              bottom: "-10%",
+              right: "-10%",
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            maxWidth: "72rem",
+            margin: "0 auto",
+            position: "relative",
+            zIndex: 2,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "Space Mono, monospace",
+              fontSize: "0.62rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "#5DD6B3",
+              marginBottom: "1.2rem",
+            }}
+          >
+            Industry Growth Infrastructure
           </div>
+
+          <h1
+            style={{
+              fontFamily: "Space Grotesk, sans-serif",
+              fontWeight: 800,
+              fontSize: isMobile
+                ? "clamp(2.8rem,13vw,4rem)"
+                : "clamp(5rem,8vw,8rem)",
+              lineHeight: 0.92,
+              letterSpacing: "-0.06em",
+              color: "#f5f5f0",
+              marginBottom: "1.5rem",
+              maxWidth: "14ch",
+            }}
+          >
+            Systems tailored to your industry.
+          </h1>
+
+          <p
+            style={{
+              fontFamily: "Space Grotesk, sans-serif",
+              fontSize: isMobile ? "0.95rem" : "1.08rem",
+              lineHeight: 1.9,
+              color: "rgba(245,245,240,0.5)",
+              maxWidth: "40rem",
+            }}
+          >
+            Every industry grows differently. We design
+            content systems, automation, and visibility
+            infrastructure specific to your market.
+          </p>
+        </div>
+      </section>
+
+      {/* INDUSTRIES */}
+      <div style={{ background: "#0d0f1a" }}>
+        {INDUSTRIES.map((ind) => (
+          <IndustrySection key={ind.id} ind={ind} />
         ))}
       </div>
 
-      {/* ── FINAL CTA ──────────────────────────────────────────── */}
-      <section style={{
-        position:"relative", overflow:"hidden",
-        background:"linear-gradient(135deg,#0d0f1a 0%,#0f1525 50%,#0a0f1e 100%)",
-        padding:"7rem 1.5rem",
-        borderTop:"1px solid rgba(93,214,179,0.08)",
-      }}>
-        <div style={{ position:"absolute", inset:0, pointerEvents:"none" }}>
-          <div style={{ position:"absolute", top:"20%", left:"10%", width:"40%", height:"60%",
-            borderRadius:"50%", background:"radial-gradient(circle,rgba(93,214,179,0.06) 0%,transparent 70%)" }} />
-          <div style={{ position:"absolute", bottom:"10%", right:"5%", width:"45%", height:"55%",
-            borderRadius:"50%", background:"radial-gradient(circle,rgba(232,197,71,0.05) 0%,transparent 70%)" }} />
-        </div>
-
-        <div style={{ maxWidth:"72rem", margin:"0 auto", textAlign:"center", position:"relative", zIndex:1 }}>
-          <div style={{ fontFamily:"Space Mono,monospace", fontSize:"0.6rem",
-            letterSpacing:"0.2em", textTransform:"uppercase", color:"#5DD6B3", marginBottom:"1.5rem" }}>
-            Don't see your industry?
+      {/* CTA */}
+      <section
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          background:
+            "linear-gradient(135deg,#0d0f1a 0%,#0f1525 50%,#0a0f1e 100%)",
+          padding: isMobile
+            ? "5rem 1.25rem"
+            : "7rem 1.5rem",
+          borderTop:
+            "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "72rem",
+            margin: "0 auto",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "Space Mono, monospace",
+              fontSize: "0.62rem",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: "#5DD6B3",
+              marginBottom: "1rem",
+            }}
+          >
+            Ready to scale?
           </div>
-          <h2 style={{ fontFamily:"Space Grotesk,sans-serif", fontWeight:800,
-            fontSize:"clamp(2rem,5vw,4rem)", lineHeight:0.97,
-            letterSpacing:"-0.045em", color:"#f5f5f0", marginBottom:"1.25rem" }}>
-            We work with any business<br />
-            <em style={{ fontStyle:"italic", fontWeight:400, color:"#E8C547" }}>serious about growth.</em>
+
+          <h2
+            style={{
+              fontFamily: "Space Grotesk, sans-serif",
+              fontWeight: 800,
+              fontSize: isMobile
+                ? "clamp(2rem,12vw,3.2rem)"
+                : "clamp(3rem,6vw,5rem)",
+              lineHeight: 0.95,
+              letterSpacing: "-0.05em",
+              color: "#f5f5f0",
+              marginBottom: "1.5rem",
+            }}
+          >
+            Build the infrastructure behind your growth.
           </h2>
-          <p style={{ maxWidth:"28rem", margin:"0 auto 3rem", fontSize:"0.93rem",
-            lineHeight:1.85, color:"rgba(245,245,240,0.45)" }}>
-            Every engagement starts with a free discovery session.
-            We'll map your industry's specific growth gaps and design the right system.
+
+          <p
+            style={{
+              maxWidth: "42rem",
+              margin: "0 auto 2.5rem",
+              fontSize: isMobile ? "0.92rem" : "1rem",
+              lineHeight: 1.9,
+              color: "rgba(245,245,240,0.45)",
+            }}
+          >
+            We combine cinematic content, AI systems,
+            automation, and strategic positioning into one
+            growth engine.
           </p>
+
           <Link
             to="/discovery"
             style={{
-              display:"inline-flex", alignItems:"center", gap:"10px",
-              fontFamily:"Space Grotesk,sans-serif", fontWeight:700,
-              fontSize:"0.78rem", letterSpacing:"0.08em", textTransform:"uppercase",
-              textDecoration:"none", color:"#0d0f1a",
-              background:"linear-gradient(135deg,#F0CF5A 0%,#E8C547 60%,#D4A830 100%)",
-              padding:"1rem 2rem", borderRadius:"100px",
-              boxShadow:"0 0 32px rgba(232,197,71,0.35)",
-              transition:"transform .25s, box-shadow .25s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-3px)";
-              e.currentTarget.style.boxShadow = "0 0 48px rgba(232,197,71,0.55)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "";
-              e.currentTarget.style.boxShadow = "0 0 32px rgba(232,197,71,0.35)";
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              textDecoration: "none",
+              background:
+                "linear-gradient(135deg,#F0CF5A 0%,#E8C547 100%)",
+              color: "#0d0f1a",
+              padding: isMobile
+                ? "1rem 1.4rem"
+                : "1.1rem 2rem",
+              borderRadius: "999px",
+              fontFamily: "Space Grotesk, sans-serif",
+              fontWeight: 700,
+              fontSize: "0.78rem",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              boxShadow:
+                "0 0 40px rgba(232,197,71,0.35)",
             }}
           >
             Book free discovery <ArrowRight size={15} />
@@ -551,3 +1285,4 @@ export default function IndustriesPage() {
     </PageShell>
   );
 }
+
