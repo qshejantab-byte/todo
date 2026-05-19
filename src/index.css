@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+@import "tailwindcss" ;
+@source "../src";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+
+
+
+
+
+@theme inline {
+    /* Register font family tokens */
+--font-display: "Space Grotesk", sans-serif;
+--font-body: "Space Grotesk", sans-serif;
+--font-mono: "Space Mono", monospace;
+
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+
+  /* Brand */
+  --color-navy: var(--navy);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-canvas: var(--canvas);
+  --color-canvas-alt: var(--canvas-alt);
+  --color-yellow: var(--yellow);
+  --color-orange: var(--orange);
+  --color-pink: var(--pink);
+  --color-teal: var(--teal);
+  --color-blue: var(--blue);
+  --color-lavender: var(--lavender);
+
+ 
+}
+
+:root {
+
+  --radius: 0.625rem;
+
+  /* Brand palette */
+  --navy: oklch(0.24 0.07 285);
+  --ink: oklch(0.18 0.06 285);
+  --ink-muted: oklch(0.18 0.06 285 / 0.55);
+  --canvas: oklch(0.985 0.005 285);
+  --canvas-alt: oklch(0.96 0.012 285);
+  --yellow: oklch(0.87 0.17 90);
+  --orange: oklch(0.78 0.18 60);
+  --pink: oklch(0.7 0.22 5);
+  --teal: oklch(0.78 0.15 170);
+  --blue: oklch(0.76 0.13 235);
+  --lavender: oklch(0.75 0.13 295);
+
+  --background: var(--navy);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--ink);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink);
+  --primary: var(--navy);
+  --primary-foreground: var(--canvas);
+  --secondary: var(--canvas-alt);
+  --secondary-foreground: var(--navy);
+  --muted: var(--canvas-alt);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--yellow);
+  --accent-foreground: var(--navy);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.18 0.06 285 / 0.16);
+  --input: oklch(0.18 0.06 285 / 0.16);
+  --ring: var(--teal);
+}
+
+.dark {
+  --background: var(--ink);
+  --foreground: var(--canvas);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #0d0f1a;
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: 1.25rem; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.03em; }
+}
+
+@layer components {
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--color-yellow); color: var(--color-navy);
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0.9rem 1.8rem; border-radius: 10px;
+    border: 2.5px solid var(--color-navy); text-decoration: none;
+    transition: background .2s, transform .15s;
+  }
+  .btn-primary:hover { background: var(--color-orange); transform: translateY(-2px); }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--color-navy); font-family: var(--font-mono);
+    font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; border-bottom: 2px solid var(--color-border);
+    padding-bottom: 2px; transition: .2s;
+  }
+  .btn-ghost:hover { color: var(--color-teal); border-color: var(--color-teal); }
+  .grid-bg {
+    background-image: radial-gradient(circle, color-mix(in oklab, var(--color-navy) 18%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .brutal-card {
+    border: 2.5px solid var(--color-navy);
+    border-radius: 16px;
+    background: var(--color-card);
+    box-shadow: 6px 6px 0 var(--color-navy);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .brutal-card:hover { transform: translate(-2px, -2px); box-shadow: 10px 10px 0 var(--color-navy); }
+  .section-title {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(2.2rem, 4vw, 3.8rem); line-height: 1.02;
+    color: var(--color-navy); letter-spacing: -0.04em;
+  }
+  .section-title em { font-style: italic; color: var(--color-teal); font-weight: 500; }
+}
