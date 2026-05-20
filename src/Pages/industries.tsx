@@ -170,7 +170,7 @@ const INDUSTRIES: Industry[] = [
 
 function HospitalityVisual() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" className="w-full h-full p-8 opacity-85">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
       <defs>
         <linearGradient id="hotelBg" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#4A69FF" stopOpacity="0.1" />
@@ -197,7 +197,7 @@ function HospitalityVisual() {
 
 function RestaurantVisual() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" className="w-full h-full p-8 opacity-85">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
       <circle cx="250" cy="250" r="220" fill="#6C63FF" opacity="0.05" />
       <circle cx="230" cy="270" r="130" fill="#E6E6E6" opacity="0.4" stroke="#6C63FF" strokeWidth="2" />
       <circle cx="230" cy="270" r="100" fill="#FFFFFF" />
@@ -215,7 +215,7 @@ function RestaurantVisual() {
 
 function RealEstateVisual() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" className="w-full h-full p-8 opacity-85">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
       <rect x="50" y="50" width="400" height="400" rx="20" fill="#5B9E8A" opacity="0.05" />
       <g transform="translate(40, 40)">
         <path d="M 60 280 L 210 130 L 360 280 Z" fill="#5B9E8A" opacity="0.2" stroke="#5B9E8A" strokeWidth="3" />
@@ -231,7 +231,7 @@ function RealEstateVisual() {
 
 function TourismVisual() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" className="w-full h-full p-8 opacity-85">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
       <circle cx="250" cy="250" r="200" fill="#6A8EC4" opacity="0.08" stroke="#6A8EC4" strokeWidth="2" strokeDasharray="5 5" />
       <path d="M 120 350 L 200 220 L 280 350 Z" fill="#6A8EC4" opacity="0.2" />
       <path d="M 220 350 L 300 200 L 380 350 Z" fill="#6A8EC4" opacity="0.3" />
@@ -246,7 +246,7 @@ function TourismVisual() {
 
 function RetailVisual() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" className="w-full h-full p-8 opacity-85">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
       <rect x="60" y="60" width="380" height="380" rx="30" fill="#9A7EC0" opacity="0.05" />
       <g transform="translate(110, 100)">
         <path d="M 40 120 L 70 40 L 210 40 L 240 120 Z" fill="none" stroke="#9A7EC0" strokeWidth="4" strokeLinecap="round" />
@@ -261,7 +261,7 @@ function RetailVisual() {
 
 function ClinicVisual() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" className="w-full h-full p-8 opacity-85">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
       <circle cx="250" cy="250" r="210" fill="#5B9E8A" opacity="0.06" />
       <g transform="translate(125, 125)">
         <rect x="90" y="0" width="70" height="250" rx="10" fill="#5B9E8A" opacity="0.2" />
@@ -281,14 +281,13 @@ function IndustryVisual({ pattern }: { pattern: Industry["visualPattern"] }) {
   return (
     <div
       style={{
-        position: "relative",
         width: "100%",
         height: "100%",
-        overflow: "hidden",
         background: "linear-gradient(160deg, #0e1020 0%, #0b0d18 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        overflow: "hidden",
       }}
     >
       {pattern === "hospitality" && <HospitalityVisual />}
@@ -335,7 +334,8 @@ function IndustrySection({ ind }: { ind: Industry }) {
   const Icon = ind.icon;
   const isMobile = useIsMobile();
 
-  const copy = (
+  // ── copy panel ────────────────────────────────────────────────────────────
+  const copyPanel = (
     <div
       style={{
         padding: isMobile ? "3rem 1.4rem" : "5rem 4rem",
@@ -346,19 +346,10 @@ function IndustrySection({ ind }: { ind: Industry }) {
         zIndex: 2,
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0px)" : "translateY(30px)",
-        transition:
-          "opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1)",
+        transition: "opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1)",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "1rem",
-          marginBottom: "1.8rem",
-          flexWrap: "wrap",
-        }}
-      >
+      <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.8rem", flexWrap: "wrap" }}>
         <div
           style={{
             width: isMobile ? "42px" : "52px",
@@ -402,30 +393,11 @@ function IndustrySection({ ind }: { ind: Industry }) {
         {ind.name}
       </h2>
 
-      <p
-        style={{
-          color: ind.accent,
-          fontFamily: "Space Grotesk, sans-serif",
-          fontStyle: "italic",
-          fontSize: isMobile ? "0.95rem" : "1.1rem",
-          lineHeight: 1.6,
-          marginBottom: "1.5rem",
-          maxWidth: "34rem",
-        }}
-      >
+      <p style={{ color: ind.accent, fontFamily: "Space Grotesk, sans-serif", fontStyle: "italic", fontSize: isMobile ? "0.95rem" : "1.1rem", lineHeight: 1.6, marginBottom: "1.5rem", maxWidth: "34rem" }}>
         {ind.tagline}
       </p>
 
-      <p
-        style={{
-          fontFamily: "Space Grotesk, sans-serif",
-          fontSize: isMobile ? "0.9rem" : "0.98rem",
-          lineHeight: 1.9,
-          color: "rgba(245,245,240,0.55)",
-          maxWidth: "36rem",
-          marginBottom: "1.4rem",
-        }}
-      >
+      <p style={{ fontFamily: "Space Grotesk, sans-serif", fontSize: isMobile ? "0.9rem" : "0.98rem", lineHeight: 1.9, color: "rgba(245,245,240,0.55)", maxWidth: "36rem", marginBottom: "1.4rem" }}>
         {ind.insight}
       </p>
 
@@ -443,31 +415,13 @@ function IndustrySection({ ind }: { ind: Industry }) {
           backdropFilter: "blur(8px)",
         }}
       >
-        <Sparkles
-          size={16}
-          color={ind.accent}
-          style={{ marginTop: "2px", flexShrink: 0 }}
-        />
-        <span
-          style={{
-            fontFamily: "Space Grotesk, sans-serif",
-            color: "rgba(245,245,240,0.48)",
-            lineHeight: 1.7,
-            fontSize: "0.85rem",
-          }}
-        >
+        <Sparkles size={16} color={ind.accent} style={{ marginTop: "2px", flexShrink: 0 }} />
+        <span style={{ fontFamily: "Space Grotesk, sans-serif", color: "rgba(245,245,240,0.48)", lineHeight: 1.7, fontSize: "0.85rem" }}>
           {ind.painPoint}
         </span>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "0.65rem",
-          marginBottom: "2.5rem",
-        }}
-      >
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.65rem", marginBottom: "2.5rem" }}>
         {ind.systems.map((s) => (
           <div
             key={s}
@@ -488,7 +442,7 @@ function IndustrySection({ ind }: { ind: Industry }) {
         ))}
       </div>
 
-      <Link
+      {/* <Link
         to="/discovery"
         style={{
           display: "inline-flex",
@@ -505,52 +459,59 @@ function IndustrySection({ ind }: { ind: Industry }) {
           fontSize: "0.88rem",
         }}
       >
-        <span>Build Your System</span>
-        <ArrowRight size={16} />
-      </Link>
+        <span>Build Your System</span> 
+         <ArrowRight size={16} />
+      </Link> */}
     </div>
   );
 
-  const visual = (
+  // ── visual panel ──────────────────────────────────────────────────────────
+  const visualPanel = (
     <div
       style={{
-        position: "relative",
-        height: isMobile ? "350px" : "auto",
-        minHeight: isMobile ? "auto" : "700px",
-        borderLeft:
-          !isMobile && !ind.flip ? "1px solid rgba(255,255,255,0.05)" : "none",
-        borderRight:
-          !isMobile && ind.flip ? "1px solid rgba(255,255,255,0.05)" : "none",
+        height: isMobile ? "220px" : "100%",
+        minHeight: isMobile ? "auto" : "400px",
+        borderLeft: !isMobile && !ind.flip ? "1px solid rgba(255,255,255,0.05)" : "none",
+        borderRight: !isMobile && ind.flip ? "1px solid rgba(255,255,255,0.05)" : "none",
       }}
     >
       <IndustryVisual pattern={ind.visualPattern} />
     </div>
   );
 
+  // ── layout: single consistent 3fr/2fr grid, children placed directly ─────
+  // flip=true  → visual (col 1) | copy (col 2)  — grid is still "3fr 2fr" but
+  //              we reverse by assigning gridColumn explicitly to each child
+  // flip=false → copy (col 1) | visual (col 2)  — natural DOM order
   return (
     <div
       ref={ref}
       style={{
         display: "grid",
-        gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+        gridTemplateColumns: isMobile ? "1fr" : "3fr 2fr",
+        gridTemplateRows: isMobile ? "auto auto" : "auto",
         borderBottom: "1px solid rgba(255,255,255,0.05)",
         background: "#05050a",
       }}
     >
       {isMobile ? (
+        // Mobile: visual on top, copy below
         <>
-          {visual}
-          {copy}
+          <div>{visualPanel}</div>
+          <div>{copyPanel}</div>
         </>
       ) : ind.flip ? (
+        // Desktop flipped: visual in narrow col 1, copy in wide col 2
+        // Achieve by assigning explicit gridColumn to each child
         <>
-          {visual}
-          {copy}
+          <div style={{ gridColumn: "1", gridRow: "1" }}>{visualPanel}</div>
+          <div style={{ gridColumn: "2", gridRow: "1" }}>{copyPanel}</div>
         </>
       ) : (
+        // Desktop normal: copy in wide col 1, visual in narrow col 2
         <>
-          {copy}
-          {visual}
+          <div style={{ gridColumn: "1", gridRow: "1" }}>{copyPanel}</div>
+          <div style={{ gridColumn: "2", gridRow: "1" }}>{visualPanel}</div>
         </>
       )}
     </div>

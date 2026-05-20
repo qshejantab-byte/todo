@@ -42,6 +42,7 @@ export const theme = {
 export default function App() {
   return (
     <Routes>
+      
       <Route path="/" element={<Index />} />
       <Route path="/approach" element={<ApproachPage />} />
       <Route path="/contact" element={<Contact />} />
