@@ -155,7 +155,7 @@ function EcosystemCanvas() {
 
         const [nr, ng, nb] = hexToRgb(n.color);
 
-        const rgba = (a: number) => `rgba(${ nr }, ${ ng }, ${ nb }, ${ a })`;
+        const rgba = (a: number) => `rgba(${nr}, ${ng}, ${nb}, ${a})`;
 
         const grad = ctx.createRadialGradient(x, y, 0, x, y, r * 2.5);
 
@@ -208,14 +208,13 @@ function EcosystemCanvas() {
               ? 12
               : 9
             : n.id === "core"
-            ? 16
-            : 11;
+              ? 16
+              : 11;
 
         ctx.fillStyle = n.id === "core" ? "#0d0f1a" : rgba(0.92);
 
-        ctx.font = `${
-  n.id === "core" ? "bold " : ""
-}${ fontSize }px Space Mono`;
+        ctx.font = `${n.id === "core" ? "bold " : ""
+          }${fontSize}px Space Mono`;
 
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -294,23 +293,23 @@ const CORES = [
   },
   {
     icon: Star,
-    label: "Reputation Mgmt",
+    label: "Reputation Management",
     desc: "Trust systems that convert visitors.",
     color: "#7DB8E8",
   },
   {
     icon: Bot,
-    label: "AI Automation",
-    desc: "Infrastructure that operates while you sleep.",
+    label: "Microsoft Systems ",
+    desc: "Integrating Microsoft ecosystem to your business ",
     color: "#E8C547",
   },
 ];
 
-const STATS = [
-  { to: 5, suffix: "+", label: "Core Systems" },
-  { to: 40, suffix: "+", label: "Assets / Month" },
-  { to: 3, suffix: "x", label: "Avg. Growth" },
-];
+// const STATS = [
+//   { to: 5, suffix: "+", label: "Core Systems" },
+//   { to: 40, suffix: "+", label: "Assets / Month" },
+//   { to: 3, suffix: "x", label: "Avg. Growth" },
+// ];
 
 export default function HomePage() {
   return (
@@ -426,33 +425,43 @@ export default function HomePage() {
               </span>
             </div>
 
-            <h1
-              className="
-                mb-6
-                leading-none
-                tracking-[-0.05em]
-                text-[#f5f5f0]
-              "
-              style={{
-                fontFamily: "Space Grotesk,sans-serif",
-                fontSize: "clamp(2.4rem,9vw,5.5rem)",
-              }}
-            >
-              <span className="text-[#E8C547] font-extrabold">
-                Growth
-              </span>{" "}
-              <em className="font-light italic">
-                infrastructure
-              </em>{" "}
-              <span className="font-light">for</span>{" "}
-              <em className="font-light italic">
-                ambitious
-              </em>{" "}
-              <span className="font-extrabold text-[#5DD6B3]">
-                brands.
-              </span>
-            </h1>
+<h1
+  className="mb-6 leading-[1.05] tracking-[-0.05em] text-[#f5f5f0]"
+  style={{
+    fontFamily: "Space Grotesk, sans-serif",
+    fontSize: "clamp(2rem, 7vw, 5rem)",
+  }}
+>
+  {/* Line 1: Brand better. */}
+  <span
+    className="text-[#E8C547] font-bold"
+    style={{ WebkitTextStroke: "1.5px var(--navy)" }}
+  >
+    Brand
+  </span>{" "}
+  better.
+  <br />
 
+  {/* Line 2: Market smarter. — forced onto one line */}
+  <span className="whitespace-nowrap">
+    {"Market "}
+    <span className="text-teal italic font-medium">
+      smarter.
+    </span>
+  </span>
+  <br />
+
+  {/* Line 3: Microsoft integration. */}
+  <span className="whitespace-nowrap">
+    {"Microsoft "}
+    <span
+      className="text-pink font-bold"
+      style={{ fontSize: "clamp(2rem, 7vw, 5rem)" }}
+    >
+      integrations.
+    </span>
+  </span>
+</h1>
             <p
               className="
                 mb-8
@@ -463,9 +472,7 @@ export default function HomePage() {
                 sm:text-[15px]
               "
             >
-              TODO engineers the brand systems, content engines,
-              and AI infrastructure that power businesses impossible
-              to ignore across East Africa and beyond.
+              TODO helps businesses improve presentation, visibility, customer trust, and internal coordination through branding, content systems, reputation management, and automation workflows.
             </p>
 
             <div
@@ -531,7 +538,7 @@ export default function HomePage() {
             </div>
 
             {/* stats */}
-            <div
+            {/* <div
               className="
                 mt-12
                 grid
@@ -580,7 +587,7 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* RIGHT */}
@@ -690,8 +697,8 @@ export default function HomePage() {
                   hover:-translate-y-1
                 "
                 style={{
-                  borderColor: `${ c.color } 30`,
-                  background: `${ c.color }08`,
+                  borderColor: `${c.color} 30`,
+                  background: `${c.color}08`,
                 }}
               >
                 <div
@@ -705,8 +712,8 @@ export default function HomePage() {
                     rounded-xl
                   "
                   style={{
-                    background: `${ c.color } 18`,
-                    border: `1px solid ${ c.color } 40`,
+                    background: `${c.color} 18`,
+                    border: `1px solid ${c.color} 40`,
                   }}
                 >
                   <c.icon
