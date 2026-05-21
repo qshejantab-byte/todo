@@ -324,7 +324,7 @@ export function SiteHeader() {
             alt="TODO Growth"
             style={{
               width: "auto",
-              height: scrolled ? "34px" : "42px",
+              height: scrolled ? "50px" : "40px",
               objectFit: "contain",
               transition: "height .35s cubic-bezier(.22,1,.36,1)",
             }}
