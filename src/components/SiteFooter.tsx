@@ -55,7 +55,7 @@ export function SiteFooter() {
               Growth infrastructure for ambitious brands across East Africa and beyond.
             </p>
             <a
-              href="mailto:hello@todo.rw"
+              href="mailto:Richie@todo.rw"
               style={{
                 fontFamily: "Space Mono, monospace",
                 fontSize: "0.65rem",
@@ -70,7 +70,7 @@ export function SiteFooter() {
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#5DD6B3"; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(93,214,179,0.3)"; }}
             >
-              hello@todo.rw
+              Richie@todo.rw
             </a>
           </div>
 
@@ -214,7 +214,7 @@ export function SiteFooter() {
             textTransform: "uppercase",
             color: "rgba(245,245,240,0.22)",
           }}>
-            © 2026 TODO Growth · Kigali, Rwanda
+            © 2026 TODO Ltd · Kigali, Rwanda
           </span>
           <span style={{
             fontFamily: "Space Mono, monospace",

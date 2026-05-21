@@ -3,6 +3,12 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { PageShell } from "@/components/PageShell";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import emailjs from "@emailjs/browser";
+
+// ─── EmailJS config ───────────────────────────────────────────────────────────
+const EMAILJS_SERVICE_ID  = "service_tyheci5";
+const EMAILJS_TEMPLATE_ID = "template_0n9539s";
+const EMAILJS_PUBLIC_KEY  = "C7fH5rnk5-9g05t9A";
 
 // ─── Fade-in on scroll ────────────────────────────────────────────────────────
 function useFadeIn(threshold = 0.12) {
@@ -33,7 +39,6 @@ function Field({
   const filled = value.length > 0;
   return (
     <div style={{ position: "relative", paddingTop: "1.2rem" }}>
-      {/* Floating label */}
       <label htmlFor={id} style={{
         position: "absolute",
         top: focused || filled ? "0" : "1.95rem",
@@ -121,22 +126,30 @@ function ContactForm() {
   const [form, setForm] = useState({ name: "", email: "", company: "", message: "" });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const set = (k: keyof typeof form) => (v: string) => setForm(p => ({ ...p, [k]: v }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const data = new FormData();
-    Object.entries(form).forEach(([k, v]) => data.append(k, v));
+    setError("");
+
     try {
-      await fetch("https://formspree.io/f/YOUR_FORM_ID", {
-        method: "POST", body: data,
-        headers: { Accept: "application/json" },
-      });
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          name:     form.name,
+          reply_to: form.email,
+          company:  form.company.trim() !== "" ? form.company : "Not provided",
+          message:  form.message,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
       setSent(true);
-    } catch {
-      const { name, email, company, message } = form;
-      window.location.href = `mailto:hello@todo.rw?subject=Inquiry — ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\nCompany: ${company}\n\n${message}`)}`;
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setError("Something went wrong. Please email us directly at Richie@todo.rw");
     } finally {
       setLoading(false);
     }
@@ -182,6 +195,15 @@ function ContactForm() {
           required value={form.message} onChange={set("message")} />
       </div>
 
+      {error && (
+        <p style={{
+          fontFamily: "Space Grotesk, sans-serif", fontSize: "0.8rem",
+          color: "#E8C547", marginBottom: "1.25rem", lineHeight: 1.6,
+        }}>
+          {error}
+        </p>
+      )}
+
       <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
         <button
           type="submit"
@@ -196,7 +218,7 @@ function ContactForm() {
             opacity: loading ? 0.7 : 1,
             transition: "opacity .2s",
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.85"; }}
+          onMouseEnter={(e) => { if (!loading) e.currentTarget.style.opacity = "0.85"; }}
           onMouseLeave={(e) => { e.currentTarget.style.opacity = loading ? "0.7" : "1"; }}
         >
           {loading ? "Sending…" : <><span>Send message</span> <ArrowRight size={13} /></>}
@@ -223,7 +245,7 @@ export default function ContactPage() {
     <PageShell>
       <Helmet>
         <title>Contact — TODO Growth</title>
-        <meta name="description" content="Reach the TODO Growth studio in Kigali, Rwanda. hello@todo.rw" />
+        <meta name="description" content="Reach the TODO Growth studio in Kigali, Rwanda. Richie@todo.rw" />
         <style>{`
           @keyframes ct-up {
             from { opacity:0; transform:translateY(18px); }
@@ -241,7 +263,6 @@ export default function ContactPage() {
         borderBottom: "1px solid rgba(255,255,255,0.06)",
       }}>
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-          {/* Eyebrow */}
           <div className="ct-fade" style={{ animationDelay: "0.05s",
             display: "flex", alignItems: "center", gap: "12px", marginBottom: "2.5rem" }}>
             <span style={{ width: "24px", height: "1px",
@@ -253,7 +274,6 @@ export default function ContactPage() {
             </span>
           </div>
 
-          {/* Headline — oversized, left-weighted, not centered */}
           <h1 className="ct-fade" style={{ animationDelay: "0.1s",
             fontFamily: "Space Grotesk, sans-serif", fontWeight: 800,
             fontSize: "clamp(3.5rem,8vw,7.5rem)", lineHeight: 0.9,
@@ -266,7 +286,6 @@ export default function ContactPage() {
             </em>
           </h1>
 
-          {/* Split — description left, quick channels right */}
           <div className="ct-fade" style={{ animationDelay: "0.18s",
             display: "grid", gap: "4rem",
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
@@ -278,9 +297,8 @@ export default function ContactPage() {
               with genuine intent — not automation.
             </p>
 
-            {/* Quick-access contact chips — hierarchical, not equal cards */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
-              <a href="mailto:hello@todo.rw"
+              <a href="mailto:Richie@todo.rw"
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   padding: "1.25rem 0",
@@ -299,13 +317,13 @@ export default function ContactPage() {
                   </div>
                   <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 600,
                     fontSize: "1rem", color: "#f5f5f0" }}>
-                    hello@todo.rw
+                    Richie@todo.rw
                   </div>
                 </div>
                 <ArrowUpRight size={16} color="rgba(245,245,240,0.25)" />
               </a>
 
-              <a href="https://wa.me/250000000000"
+              <a href="https://wa.me/250794003368"
                 target="_blank" rel="noopener noreferrer"
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -325,7 +343,7 @@ export default function ContactPage() {
                   </div>
                   <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 600,
                     fontSize: "1rem", color: "#f5f5f0" }}>
-                    +250 XXX XXX XXX
+                    +250 794003368
                   </div>
                 </div>
                 <ArrowUpRight size={16} color="rgba(245,245,240,0.25)" />
@@ -356,7 +374,6 @@ export default function ContactPage() {
           transform: formReveal.visible ? "none" : "translateY(20px)",
           transition: "opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1)" }}>
 
-          {/* Left — framing copy */}
           <div style={{ paddingTop: "0.5rem" }}>
             <div style={{ width: "2px", height: "48px",
               background: "linear-gradient(180deg, #E8C547, transparent)",
@@ -373,7 +390,6 @@ export default function ContactPage() {
               what's possible — we'd love to hear from you.
             </p>
 
-            {/* Response promise — elevated, not generic */}
             <div style={{ borderLeft: "1px solid rgba(255,255,255,0.08)", paddingLeft: "1.25rem" }}>
               {[
                 "Every inquiry is reviewed with care.",
@@ -390,12 +406,11 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Right — form */}
           <ContactForm />
         </div>
       </section>
 
-      {/* ── THREE CHANNELS — each treated differently ──────────────── */}
+      {/* ── THREE CHANNELS ────────────────────────────────────────── */}
       <section ref={channelsReveal.ref} style={{
         background: "#09090f",
         padding: "6rem 1.5rem",
@@ -414,8 +429,7 @@ export default function ContactPage() {
           <div style={{ display: "grid", gap: "0",
             gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
 
-            {/* Email — formal and primary */}
-            <a href="mailto:hello@todo.rw" style={{
+            <a href="mailto:Richie@todo.rw" style={{
               display: "block", padding: "2.5rem 2rem",
               borderRight: "1px solid rgba(255,255,255,0.05)",
               textDecoration: "none",
@@ -432,7 +446,7 @@ export default function ContactPage() {
               <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 800,
                 fontSize: "1.5rem", letterSpacing: "-0.03em", color: "#f5f5f0",
                 marginBottom: "0.5rem" }}>
-                hello@todo.rw
+                Richie@todo.rw
               </div>
               <p style={{ fontFamily: "Space Grotesk, sans-serif", fontSize: "0.8rem",
                 lineHeight: 1.7, color: "rgba(245,245,240,0.35)", marginBottom: "1.5rem" }}>
@@ -446,8 +460,7 @@ export default function ContactPage() {
               </span>
             </a>
 
-            {/* WhatsApp — direct and rapid */}
-            <a href="https://wa.me/250000000000" target="_blank" rel="noopener noreferrer"
+            <a href="https://wa.me/250794003368" target="_blank" rel="noopener noreferrer"
               style={{
                 display: "block", padding: "2.5rem 2rem",
                 borderRight: "1px solid rgba(255,255,255,0.05)",
@@ -479,7 +492,6 @@ export default function ContactPage() {
               </span>
             </a>
 
-            {/* Studio — physical presence, not a link */}
             <div style={{ padding: "2.5rem 2rem" }}>
               <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.5rem",
                 letterSpacing: "0.2em", textTransform: "uppercase",
@@ -516,7 +528,6 @@ export default function ContactPage() {
         transition: "opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1)",
       }}>
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-          {/* Asymmetric — headline left, discovery CTA right */}
           <div style={{ display: "grid", gap: "4rem",
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             alignItems: "end" }}>

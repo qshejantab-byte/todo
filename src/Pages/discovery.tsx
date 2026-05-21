@@ -2,6 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { PageShell } from "@/components/PageShell";
 import { ArrowRight, ArrowLeft, Check } from "lucide-react";
+import emailjs from "@emailjs/browser";
+
+// ─── EmailJS config ───────────────────────────────────────────────────────────
+const EMAILJS_SERVICE_ID  = "service_tyheci5";
+const EMAILJS_TEMPLATE_ID = "template_jif5zd6";
+const EMAILJS_PUBLIC_KEY  = "C7fH5rnk5-9g05t9A";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface FormData {
@@ -21,17 +27,17 @@ const FOCUS_OPTIONS = [
 ];
 
 const JOURNEY_STEPS = [
-  { num: "01", label: "Discovery Session",   desc: "45-minute strategic conversation",            color: "#E8C547" },
-  { num: "02", label: "Strategic Analysis",  desc: "We map your gaps and opportunities",          color: "#5DD6B3" },
-  { num: "03", label: "Growth Blueprint",    desc: "A clear system designed for your stage",      color: "#C8A8E9" },
-  { num: "04", label: "Implementation",      desc: "Coordinated execution across all systems",    color: "#E87D7D" },
+  { num: "01", label: "Discovery Session",  desc: "45-minute strategic conversation",         color: "#E8C547" },
+  { num: "02", label: "Strategic Analysis", desc: "We map your gaps and opportunities",        color: "#5DD6B3" },
+  { num: "03", label: "Growth Blueprint",   desc: "A clear system designed for your stage",   color: "#C8A8E9" },
+  { num: "04", label: "Implementation",     desc: "Coordinated execution across all systems", color: "#E87D7D" },
 ];
 
 const INSIGHTS = [
-  { headline: "We uncover where visibility is leaking.",       body: "Most brands lose attention at predictable points. We find exactly where — and why." },
-  { headline: "We identify operational drag.",                  body: "The workflows slowing your team, the tasks that can be automated, the bottlenecks compounding costs." },
-  { headline: "We map your clearest growth opportunities.",    body: "Not a generic recommendation. A prioritised, stage-specific roadmap built for where you are now." },
-  { headline: "We tell you the truth.",                        body: "No inflated promises. A honest assessment of what's working, what isn't, and what to do next." },
+  { headline: "We uncover where visibility is leaking.",     body: "Most brands lose attention at predictable points. We find exactly where — and why." },
+  { headline: "We identify operational drag.",               body: "The workflows slowing your team, the tasks that can be automated, the bottlenecks compounding costs." },
+  { headline: "We map your clearest growth opportunities.",  body: "Not a generic recommendation. A prioritised, stage-specific roadmap built for where you are now." },
+  { headline: "We tell you the truth.",                      body: "No inflated promises. A honest assessment of what's working, what isn't, and what to do next." },
 ];
 
 // ─── Fade-in on scroll ────────────────────────────────────────────────────────
@@ -160,10 +166,14 @@ function DiscoveryForm() {
   const [step, setStep]           = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState("");
   const [form, setForm]           = useState<FormData>({ name: "", email: "", business: "", focus: "", message: "" });
 
   const set = (key: keyof FormData) => (val: string) =>
     setForm((prev) => ({ ...prev, [key]: val }));
+
+  // Map focus value to readable label for the email
+  const focusLabel = FOCUS_OPTIONS.find((o) => o.value === form.focus)?.label ?? form.focus;
 
   const steps = [
     {
@@ -172,8 +182,8 @@ function DiscoveryForm() {
       valid: form.name.length > 1 && form.email.includes("@"),
       content: (
         <>
-          <PremiumInput id="name"     name="name"     label="Your name"              placeholder="Jane Doe"              required value={form.name}     onChange={set("name")} />
-          <PremiumInput id="email"    name="email"    type="email" label="Email address" placeholder="jane@yourcompany.com" required value={form.email}    onChange={set("email")} />
+          <PremiumInput id="name"     name="name"     label="Your name"              placeholder="Enter your Name"              required value={form.name}     onChange={set("name")} />
+          <PremiumInput id="email"    name="email"    type="email" label="Email address" placeholder="Enter your Email" required value={form.email}    onChange={set("email")} />
           <PremiumInput id="business" name="business" label="Your business (optional)" placeholder="Company or project name"       value={form.business} onChange={set("business")} />
         </>
       ),
@@ -253,16 +263,25 @@ function DiscoveryForm() {
 
   async function handleSubmit() {
     setLoading(true);
-    const data = new FormData();
-    Object.entries(form).forEach(([k, v]) => data.append(k, v));
+    setError("");
+
     try {
-      await fetch("https://formspree.io/f/YOUR_FORM_ID", {
-        method: "POST", body: data, headers: { Accept: "application/json" },
-      });
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          name:       form.name,
+          reply_to:   form.email,
+          business:   form.business.trim() !== "" ? form.business : "Not provided",
+          focus:      focusLabel,
+          message:    form.message.trim() !== "" ? form.message : "No additional context provided.",
+        },
+        EMAILJS_PUBLIC_KEY
+      );
       setSubmitted(true);
-    } catch {
-      const { name, email, message, focus, business } = form;
-      window.location.href = `mailto:Richie@todo.rw?subject=Discovery Session — ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\nBusiness: ${business}\nFocus: ${focus}\n\n${message}`)}`;
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setError("Something went wrong. Please email us directly at Richie@todo.rw");
     } finally {
       setLoading(false);
     }
@@ -357,6 +376,16 @@ function DiscoveryForm() {
 
       {current.content}
 
+      {/* Error message */}
+      {error && (
+        <p style={{
+          fontFamily: "monospace", fontSize: "0.65rem", letterSpacing: "0.05em",
+          color: "#E8C547", marginBottom: "1rem", lineHeight: 1.6,
+        }}>
+          {error}
+        </p>
+      )}
+
       {/* Nav buttons */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
         {step > 0 && (
@@ -432,120 +461,52 @@ export default function DiscoveryPage() {
           .disc-fade { animation: disc-up .75s cubic-bezier(.22,1,.36,1) both; }
           ::placeholder { color: rgba(245,245,240,0.22) !important; }
 
-          /* ── RESPONSIVE HERO GRID ── */
           .disc-hero-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-            max-width: 72rem;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
+            display: flex; flex-direction: column; gap: 2.5rem;
+            max-width: 72rem; margin: 0 auto; position: relative; z-index: 1;
           }
           @media (min-width: 900px) {
-            .disc-hero-grid {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 4rem;
-              align-items: start;
-            }
+            .disc-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
           }
           @media (min-width: 1100px) {
-            .disc-hero-grid {
-              grid-template-columns: 1.1fr 0.9fr;
-              gap: 5rem;
-            }
+            .disc-hero-grid { grid-template-columns: 1.1fr 0.9fr; gap: 5rem; }
           }
+          .disc-hero-section { padding: 6rem 1.25rem 4rem; }
+          @media (min-width: 640px) { .disc-hero-section { padding: 8rem 2rem 5rem; } }
+          @media (min-width: 900px) { .disc-hero-section { padding: 10rem 2.5rem 6rem; } }
 
-          /* ── HERO PADDING ── */
-          .disc-hero-section {
-            padding: 6rem 1.25rem 4rem;
-          }
-          @media (min-width: 640px) {
-            .disc-hero-section {
-              padding: 8rem 2rem 5rem;
-            }
-          }
-          @media (min-width: 900px) {
-            .disc-hero-section {
-              padding: 10rem 2.5rem 6rem;
-            }
-          }
-
-          /* ── FORM CARD ── */
           .disc-form-card {
-            background: rgba(255,255,255,0.025);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 20px;
-            padding: 1.75rem 1.5rem;
+            background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 1.75rem 1.5rem;
             backdrop-filter: blur(20px);
             box-shadow: 0 32px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-            width: 100%;
-            box-sizing: border-box;
+            width: 100%; box-sizing: border-box;
           }
-          @media (min-width: 640px) {
-            .disc-form-card {
-              padding: 2.25rem 2rem;
-            }
-          }
-          @media (min-width: 900px) {
-            .disc-form-card {
-              padding: 2.5rem;
-              position: sticky;
-              top: 100px;
-            }
-          }
+          @media (min-width: 640px) { .disc-form-card { padding: 2.25rem 2rem; } }
+          @media (min-width: 900px) { .disc-form-card { padding: 2.5rem; position: sticky; top: 100px; } }
 
-          /* ── INSIGHTS GRID ── */
           .disc-insights-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05);
+            display: grid; grid-template-columns: 1fr;
+            background: rgba(255,255,255,0.05); border-radius: 20px;
+            overflow: hidden; border: 1px solid rgba(255,255,255,0.05);
           }
-          @media (min-width: 640px) {
-            .disc-insights-grid {
-              grid-template-columns: 1fr 1fr;
-            }
-          }
-          @media (min-width: 1024px) {
-            .disc-insights-grid {
-              grid-template-columns: repeat(4, 1fr);
-            }
-          }
+          @media (min-width: 640px) { .disc-insights-grid { grid-template-columns: 1fr 1fr; } }
+          @media (min-width: 1024px) { .disc-insights-grid { grid-template-columns: repeat(4, 1fr); } }
           .disc-insight-cell {
-            padding: 2rem 1.5rem;
-            background: #0d0f1a;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: background .25s;
+            padding: 2rem 1.5rem; background: #0d0f1a;
+            border-bottom: 1px solid rgba(255,255,255,0.05); transition: background .25s;
           }
           @media (min-width: 640px) {
-            .disc-insight-cell {
-              border-right: 1px solid rgba(255,255,255,0.05);
-              border-bottom: none;
-            }
+            .disc-insight-cell { border-right: 1px solid rgba(255,255,255,0.05); border-bottom: none; }
           }
           .disc-insight-cell:hover { background: rgba(255,255,255,0.025); }
 
-          /* ── STATS BAR ── */
           .disc-stats-bar {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            padding: 1.25rem 1.5rem;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
+            display: flex; flex-direction: column; gap: 1rem;
+            padding: 1.25rem 1.5rem; border-radius: 14px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
           }
-          @media (min-width: 480px) {
-            .disc-stats-bar {
-              flex-direction: row;
-              gap: 0;
-              width: fit-content;
-            }
-          }
+          @media (min-width: 480px) { .disc-stats-bar { flex-direction: row; gap: 0; width: fit-content; } }
         `}</style>
       </Helmet>
 
@@ -556,10 +517,7 @@ export default function DiscoveryPage() {
         borderBottom: "1px solid rgba(255,255,255,0.05)",
       }}>
         <AmbientCanvas />
-
         <div className="disc-hero-grid">
-
-          {/* Left — copy */}
           <div>
             <div className="disc-fade" style={{ animationDelay: "0.05s",
               display: "flex", alignItems: "center", gap: "12px", marginBottom: "2rem" }}>
@@ -575,8 +533,7 @@ export default function DiscoveryPage() {
               fontFamily: "sans-serif", fontWeight: 800,
               fontSize: "clamp(2.6rem, 6vw, 5.5rem)", lineHeight: 0.93,
               letterSpacing: "-0.05em", color: "#f5f5f0", marginBottom: "1.5rem" }}>
-              The first<br />
-              conversation<br />
+              The first<br />conversation<br />
               <em style={{ fontStyle: "italic", fontWeight: 400, color: "rgba(245,245,240,0.35)" }}>
                 changes everything.
               </em>
@@ -601,8 +558,7 @@ export default function DiscoveryPage() {
                   paddingLeft: i > 0 ? "1.5rem" : "0",
                   paddingRight: i < 2 ? "1.5rem" : "0",
                 }}>
-                  <span style={{ fontFamily: "sans-serif", fontWeight: 700,
-                    fontSize: "0.95rem", color: "#E8C547" }}>
+                  <span style={{ fontFamily: "sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "#E8C547" }}>
                     {item.value}
                   </span>
                   <span style={{ fontFamily: "monospace", fontSize: "0.5rem",
@@ -615,7 +571,6 @@ export default function DiscoveryPage() {
             </div>
           </div>
 
-          {/* Right — form card */}
           <div className="disc-fade disc-form-card" style={{ animationDelay: "0.22s" }}>
             <div style={{ fontFamily: "monospace", fontSize: "0.55rem",
               letterSpacing: "0.2em", textTransform: "uppercase",
@@ -629,7 +584,6 @@ export default function DiscoveryPage() {
             </h2>
             <DiscoveryForm />
           </div>
-
         </div>
       </section>
 
@@ -655,7 +609,6 @@ export default function DiscoveryPage() {
               </em>
             </h2>
           </div>
-
           <div className="disc-insights-grid">
             {INSIGHTS.map((ins, i) => (
               <div key={ins.headline} className="disc-insight-cell">
@@ -702,7 +655,6 @@ export default function DiscoveryPage() {
                 with one conversation.
               </em>
             </h2>
-
             <div style={{ display: "flex", flexDirection: "column" }}>
               {JOURNEY_STEPS.map((js, i) => (
                 <div key={js.num} style={{
@@ -770,7 +722,7 @@ export default function DiscoveryPage() {
           </p>
           <a
             href="#top"
-            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+            onClick={ (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
             style={{
               display: "inline-flex", alignItems: "center", gap: "10px",
               fontFamily: "sans-serif", fontWeight: 700,
