@@ -6,7 +6,7 @@ import emailjs from "@emailjs/browser";
 
 // ─── EmailJS config ───────────────────────────────────────────────────────────
 const EMAILJS_SERVICE_ID  = "service_tyheci5";
-const EMAILJS_TEMPLATE_ID = "template_jif5zd6";
+const EMAILJS_TEMPLATE_ID = "template_q0zx8tz";
 const EMAILJS_PUBLIC_KEY  = "C7fH5rnk5-9g05t9A";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
