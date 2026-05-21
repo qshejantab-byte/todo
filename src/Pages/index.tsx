@@ -450,13 +450,12 @@ export default function HomePage() {
     </span>
   </span>
   <br />
-
   {/* Line 3: Microsoft integration. */}
   <span className="whitespace-nowrap">
     {"Microsoft "}
     <span
       className="text-pink font-bold"
-      style={{ fontSize: "clamp(2rem, 7vw, 5rem)" }}
+      style={{ fontSize: "clamp(1.25rem, 4.5vw, 3rem)" }}
     >
       integrations.
     </span>
