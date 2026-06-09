@@ -29,7 +29,7 @@ interface Industry {
   name: string;
   tagline: string;
   insight: string;
-  painPoint: string;
+  // painPoint: string;
   systems: string[];
   accent: string;
   glow: string;
@@ -52,7 +52,7 @@ const INDUSTRIES: Industry[] = [
     tagline: "Luxury presence for premium destinations.",
     insight:
       "Hotels and lodges lose guests to competitors with stronger visual presence — not better rooms.",
-    painPoint: "Invisible online. Underbooked despite being exceptional.",
+    // painPoint: "Invisible online. Underbooked despite being exceptional.",
     systems: [
       "Cinematic property reels",
       "Review & reputation workflow",
@@ -71,7 +71,7 @@ const INDUSTRIES: Industry[] = [
     tagline: "Content that makes people hungry before they arrive.",
     insight:
       "Food businesses that invest in visual storytelling fill tables 3× faster than those who don't.",
-    painPoint: "Inconsistent social presence. No system behind the content.",
+    // painPoint: "Inconsistent social presence. No system behind the content.",
     systems: [
       "Dish & atmosphere reels",
       "Menu launch campaigns",
@@ -91,7 +91,7 @@ const INDUSTRIES: Industry[] = [
     tagline: "Architectural storytelling that sells before the viewing.",
     insight:
       "Properties with cinematic content sell 40% faster and attract higher-quality leads.",
-    painPoint: "Listings that look average. Leads that don't convert.",
+    // painPoint: "Listings that look average. Leads that don't convert.",
     systems: [
       "Cinematic walkthroughs",
       "Listing photography system",
@@ -108,9 +108,8 @@ const INDUSTRIES: Industry[] = [
     index: "04",
     name: "Tourism & Experiences",
     tagline: "Turn experiences into unforgettable visual journeys.",
-    insight:
-      "Travelers choose destinations based on digital emotion — what they feel before they book.",
-    painPoint: "Amazing experiences that look ordinary online.",
+    insight:"Travelers choose destinations based on digital emotion — what they feel before they book.",
+    // painPoint: "Amazing experiences that look ordinary online.",
     systems: [
       "Experience documentation",
       "Destination marketing content",
@@ -130,7 +129,7 @@ const INDUSTRIES: Industry[] = [
     tagline: "Product content systems that drive consistent revenue.",
     insight:
       "Brands with structured product content generate 2× more repeat purchases online.",
-    painPoint: "No posting system. Inconsistent product visibility.",
+    // painPoint: "No posting system. Inconsistent product visibility.",
     systems: [
       "Product content system",
       "Campaign creative library",
@@ -149,7 +148,7 @@ const INDUSTRIES: Industry[] = [
     tagline: "Trust-first presence for care-focused businesses.",
     insight:
       "Patients choose clinics based on trust signals — reviews, tone, and digital credibility.",
-    painPoint: "Low online visibility. Reputation not actively managed.",
+    // painPoint: "Low online visibility. Reputation not actively managed.",
     systems: [
       "Trust-first brand system",
       "Review reminder automation",
@@ -401,7 +400,7 @@ function IndustrySection({ ind }: { ind: Industry }) {
         {ind.insight}
       </p>
 
-      <div
+      {/* <div
         style={{
           display: "flex",
           gap: "12px",
@@ -419,7 +418,7 @@ function IndustrySection({ ind }: { ind: Industry }) {
         <span style={{ fontFamily: "Space Grotesk, sans-serif", color: "rgba(245,245,240,0.48)", lineHeight: 1.7, fontSize: "0.85rem" }}>
           {ind.painPoint}
         </span>
-      </div>
+      </div> */}
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.65rem", marginBottom: "2.5rem" }}>
         {ind.systems.map((s) => (

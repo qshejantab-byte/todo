@@ -211,7 +211,7 @@ function EcosystemCanvas() {
               ? 16
               : 11;
 
-        ctx.fillStyle = n.id === "core" ? "#0d0f1a" : rgba(0.92);
+        ctx.fillStyle = n.id === "core" ? "#E8C547" : rgba(0.92);
 
         ctx.font = `${n.id === "core" ? "bold " : ""
           }${fontSize}px Space Mono`;

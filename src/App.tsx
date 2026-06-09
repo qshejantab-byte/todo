@@ -49,6 +49,7 @@ export default function App() {
       <Route path="/discovery" element={<Discovery />} />
       <Route path="/industries" element={<Industries />} />
       <Route path="/packages" element={<Packages />} />
+      
     </Routes>
   );
 }
