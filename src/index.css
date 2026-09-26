@@ -107,7 +107,7 @@
   * { border-color: var(--color-border); }
   html { scroll-behavior: smooth; }
   body {
-    background-color: #0d0f1a;
+    background-color: #0b0d17;
     color: var(--color-foreground);
     font-family: var(--font-body);
     font-weight: 300;
@@ -162,4 +162,61 @@
     color: var(--color-navy); letter-spacing: -0.04em;
   }
   .section-title em { font-style: italic; color: var(--color-teal); font-weight: 500; }
+
+  .anim-up { animation: anim-up .7s cubic-bezier(.22,1,.36,1) both; }
+}
+
+@keyframes anim-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Keep anchored sections clear of the fixed header */
+[id] { scroll-margin-top: 88px; }
+
+/* One visible focus style for every interactive element */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid #E8C547;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+:where(input, select, textarea):focus-visible { outline-offset: 1px; border-radius: 10px; }
+
+@keyframes mobile-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes link-stagger {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.mobile-menu { animation: mobile-in .3s cubic-bezier(.22,1,.36,1) both; }
+
+/* Very slow cinematic drift for atmospheric stills (paused off-screen in JS). */
+@keyframes media-drift {
+  from { transform: scale(1.03) translate3d(0, 0, 0); }
+  to   { transform: scale(1.14) translate3d(-2.5%, -1.5%, 0); }
+}
+.media-drift { animation: media-drift 38s ease-in-out infinite alternate; will-change: transform; }
+
+/* Package rows: background image fades in from the bottom (mobile) or right (desktop). */
+.package-media {
+  -webkit-mask-image: linear-gradient(0deg, #000 0%, transparent 55%);
+  mask-image: linear-gradient(0deg, #000 0%, transparent 55%);
+}
+@media (min-width: 1024px) {
+  .package-media {
+    left: auto; width: 48%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 70%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 70%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

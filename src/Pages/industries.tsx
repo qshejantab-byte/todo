@@ -1,536 +1,374 @@
-import { useEffect, useRef, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import {
-  ArrowRight,
-  Hotel,
-  UtensilsCrossed,
-  Building2,
-  Plane,
-  ShoppingBag,
-  HeartPulse,
-  Sparkles,
-} from "lucide-react";
-
-function useIsMobile(breakpoint = 900) {
-  const [mobile, setMobile] = useState(window.innerWidth <= breakpoint);
-  useEffect(() => {
-    const onResize = () => setMobile(window.innerWidth <= breakpoint);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [breakpoint]);
-  return mobile;
-}
+  C,
+  F,
+  TYPE,
+  LABEL,
+  Seo,
+  PageHero,
+  Reveal,
+  Cta,
+  FinalCta,
+  MediaSlot,
+} from "@/components/site/ui";
+import { MEDIA, type MediaKey } from "@/content/media";
 
 interface Industry {
   id: string;
-  index: string;
   name: string;
+  who: string;
   tagline: string;
   insight: string;
-  // painPoint: string;
+  // Each entry maps to a confirmed TODO service capability.
   systems: string[];
-  accent: string;
-  glow: string;
-  icon: React.ElementType;
-  visualPattern:
-    | "hospitality"
-    | "restaurant"
-    | "realestate"
-    | "tourism"
-    | "retail"
-    | "clinic";
-  flip?: boolean;
+  primary: boolean;
+  work?: { label: string; to: string };
 }
 
+// Primary focus first. Section IDs match the anchors used across the site.
 const INDUSTRIES: Industry[] = [
   {
     id: "hospitality",
-    index: "01",
     name: "Hospitality",
-    tagline: "Luxury presence for premium destinations.",
+    who: "Hotels · Resorts · Lodges · Guest houses",
+    tagline: "Premium presence for hotels, lodges and resorts.",
     insight:
-      "Hotels and lodges lose guests to competitors with stronger visual presence — not better rooms.",
-    // painPoint: "Invisible online. Underbooked despite being exceptional.",
+      "Guests compare properties online long before they book. We help yours look as good as it is, make inquiring and booking easy, and give your team better tools behind the scenes.",
     systems: [
-      "Cinematic property reels",
-      "Review & reputation workflow",
-      "Content calendar system",
-      "Direct booking content strategy",
+      "Hospitality websites with booking & inquiry integrations",
+      "360° virtual tours",
+      "Photo, video & drone content",
+      "Review management & Google Business Profile",
+      "AI knowledge bases & staff training (Microsoft & AI)",
     ],
-    accent: "#C8A96E",
-    glow: "rgba(200,169,110,0.12)",
-    icon: Hotel,
-    visualPattern: "hospitality",
-  },
-  {
-    id: "restaurants",
-    index: "02",
-    name: "Restaurants & Cafés",
-    tagline: "Content that makes people hungry before they arrive.",
-    insight:
-      "Food businesses that invest in visual storytelling fill tables 3× faster than those who don't.",
-    // painPoint: "Inconsistent social presence. No system behind the content.",
-    systems: [
-      "Dish & atmosphere reels",
-      "Menu launch campaigns",
-      "Reservation automation",
-      "Review response templates",
-    ],
-    accent: "#C47B6A",
-    glow: "rgba(196,123,106,0.12)",
-    icon: UtensilsCrossed,
-    visualPattern: "restaurant",
-    flip: true,
-  },
-  {
-    id: "realestate",
-    index: "03",
-    name: "Real Estate",
-    tagline: "Architectural storytelling that sells before the viewing.",
-    insight:
-      "Properties with cinematic content sell 40% faster and attract higher-quality leads.",
-    // painPoint: "Listings that look average. Leads that don't convert.",
-    systems: [
-      "Cinematic walkthroughs",
-      "Listing photography system",
-      "Lead CRM & tracking",
-      "Campaign creative",
-    ],
-    accent: "#5B9E8A",
-    glow: "rgba(91,158,138,0.12)",
-    icon: Building2,
-    visualPattern: "realestate",
+    primary: true,
+    work: { label: "See our work with Grotta Resort and Eagleview Farm", to: "/portfolio" },
   },
   {
     id: "tourism",
-    index: "04",
-    name: "Tourism & Experiences",
-    tagline: "Turn experiences into unforgettable visual journeys.",
-    insight:"Travelers choose destinations based on digital emotion — what they feel before they book.",
-    // painPoint: "Amazing experiences that look ordinary online.",
+    name: "Tourism",
+    who: "Tour operators · Experiences · Attractions",
+    tagline: "Turn experiences into journeys people want to book.",
+    insight:
+      "Travelers decide on feeling before they decide on price. We capture your experiences, package them into clear offers and keep your reputation strong where travelers look.",
     systems: [
-      "Experience documentation",
-      "Destination marketing content",
-      "TripAdvisor reputation system",
-      "Tour campaign creative",
+      "Photo, video & drone content",
+      "Offer packaging",
+      "Digital marketing & SEO",
+      "Online reputation & review management",
     ],
-    accent: "#6A8EC4",
-    glow: "rgba(106,142,196,0.12)",
-    icon: Plane,
-    visualPattern: "tourism",
-    flip: true,
+    primary: true,
+  },
+  {
+    id: "realestate",
+    name: "Real Estate",
+    who: "Developers · Property managers · Agencies",
+    tagline: "Property storytelling that sells before the viewing.",
+    insight:
+      "Buyers and tenants shortlist online. Virtual tours, strong property content and organized lead follow-up help serious inquiries reach your team faster.",
+    systems: [
+      "360° virtual tours",
+      "Property photography & drone production",
+      "Campaign landing pages & advertising",
+      "CRM & lead-tracking systems (Microsoft & AI)",
+    ],
+    primary: true,
+  },
+  {
+    id: "restaurants",
+    name: "Restaurants",
+    who: "Restaurants · Cafés · Bars",
+    tagline: "Content that makes people hungry before they arrive.",
+    insight:
+      "Consistent content, a well-managed Google Business Profile and good reviews keep tables full between the busy nights.",
+    systems: [
+      "Photo & video for social media",
+      "Social media management & advertising",
+      "Google Business Profile & review management",
+      "Booking & inquiry integrations",
+    ],
+    primary: false,
   },
   {
     id: "retail",
-    index: "05",
-    name: "Retail & E-commerce",
-    tagline: "Product content systems that drive consistent revenue.",
+    name: "Retail",
+    who: "Shops · Brands · Showrooms",
+    tagline: "Product content that sells consistently.",
     insight:
-      "Brands with structured product content generate 2× more repeat purchases online.",
-    // painPoint: "No posting system. Inconsistent product visibility.",
+      "Regular content and campaigns keep your products visible every week, not just at launch.",
     systems: [
-      "Product content system",
-      "Campaign creative library",
-      "Structured posting calendar",
-      "E-commerce content strategy",
+      "Product photography & video",
+      "Social media management & advertising",
+      "Campaign landing pages",
+      "Brand identity & marketing materials",
     ],
-    accent: "#9A7EC0",
-    glow: "rgba(154,126,192,0.12)",
-    icon: ShoppingBag,
-    visualPattern: "retail",
+    primary: false,
   },
   {
     id: "clinics",
-    index: "06",
-    name: "Clinics & Services",
+    name: "Clinics",
+    who: "Clinics · Practices · Care providers",
     tagline: "Trust-first presence for care-focused businesses.",
     insight:
-      "Patients choose clinics based on trust signals — reviews, tone, and digital credibility.",
-    // painPoint: "Low online visibility. Reputation not actively managed.",
+      "Patients choose care on trust. Clear branding, a managed reputation and simple ways to get in touch make that trust visible.",
     systems: [
-      "Trust-first brand system",
-      "Review reminder automation",
-      "Calendar coordination",
-      "Educational content strategy",
+      "Brand strategy & identity",
+      "Online reputation & review management",
+      "Booking & inquiry integrations",
+      "Microsoft 365 & internal AI assistants",
     ],
-    accent: "#5B9E8A",
-    glow: "rgba(91,158,138,0.12)",
-    icon: HeartPulse,
-    visualPattern: "clinic",
-    flip: true,
+    primary: false,
+  },
+  {
+    id: "ngos",
+    name: "NGOs & Development",
+    who: "Foundations · NGOs · Development programs",
+    tagline: "Show the work, not just the mission statement.",
+    insight:
+      "Supporters and partners want to see impact. Documentary and social content, a strong digital presence and virtual tours bring your programs closer to the people who back them.",
+    systems: [
+      "Documentary video production",
+      "Photo & video for social media",
+      "Digital marketing & SEO",
+      "360° virtual tours",
+    ],
+    primary: false,
+    work: {
+      label: "See our work with Sustainable Villages Foundation",
+      to: "/portfolio#sustainable-villages-foundation",
+    },
   },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Inline Vector Graphic Components
-// ─────────────────────────────────────────────────────────────────────────────
+// Replaceable image slots for the primary industries (see content/media.ts).
+const INDUSTRY_MEDIA: Record<string, MediaKey> = {
+  hospitality: "hospitality",
+  tourism: "tourism",
+  realestate: "realestate",
+};
 
-function HospitalityVisual() {
+function HowWeHelp({ items }: { items: string[] }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
-      <defs>
-        <linearGradient id="hotelBg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#4A69FF" stopOpacity="0.1" />
-          <stop offset="100%" stopColor="#4A69FF" stopOpacity="0.01" />
-        </linearGradient>
-      </defs>
-      <circle cx="250" cy="250" r="210" fill="url(#hotelBg)" />
-      <g transform="translate(10, 0)">
-        <rect x="90" y="160" width="180" height="240" rx="4" fill="#6C63FF" opacity="0.15" stroke="#6C63FF" strokeWidth="2" />
-        <rect x="110" y="120" width="140" height="40" fill="#4A69FF" opacity="0.3" />
-        <path d="M70 120 h220 v10 h-220 z" fill="#6C63FF" />
-        {[0, 1, 2, 3].map((row) =>
-          [0, 1, 2].map((col) => (
-            <rect key={`w-${row}-${col}`} x={120 + col * 45} y={190 + row * 45} width="25" height="30" rx="2" fill="#FFFFFF" opacity="0.7" />
-          ))
-        )}
-        <rect x="300" y="220" width="110" height="180" rx="4" fill="#6C63FF" opacity="0.1" stroke="#6C63FF" strokeWidth="1.5" />
-        <circle cx="180" cy="70" r="15" fill="#FFD700" opacity="0.8" />
-        <path d="M 320 150 L 350 120 L 380 150" stroke="#6C63FF" strokeWidth="3" fill="none" opacity="0.5" />
-      </g>
-    </svg>
-  );
-}
-
-function RestaurantVisual() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
-      <circle cx="250" cy="250" r="220" fill="#6C63FF" opacity="0.05" />
-      <circle cx="230" cy="270" r="130" fill="#E6E6E6" opacity="0.4" stroke="#6C63FF" strokeWidth="2" />
-      <circle cx="230" cy="270" r="100" fill="#FFFFFF" />
-      <path d="M 120 180 C 120 120, 170 120, 170 180 Z" fill="#6C63FF" opacity="0.2" />
-      <g transform="translate(200, 120)">
-        <path d="M10 15 v120 h15 v-120 z" fill="#6C63FF" />
-        <path d="M40 15 v60 c0 15, 25 15, 25 0 v-60" fill="none" stroke="#6C63FF" strokeWidth="4" />
-        <line x1="52" y1="75" x2="52" y2="135" stroke="#6C63FF" strokeWidth="4" />
-      </g>
-      <circle cx="340" cy="360" r="45" fill="#6C63FF" opacity="0.15" />
-      <path d="M 80 400 Q 250 370 420 400" stroke="#6C63FF" strokeWidth="2" fill="none" opacity="0.3" />
-    </svg>
-  );
-}
-
-function RealEstateVisual() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
-      <rect x="50" y="50" width="400" height="400" rx="20" fill="#5B9E8A" opacity="0.05" />
-      <g transform="translate(40, 40)">
-        <path d="M 60 280 L 210 130 L 360 280 Z" fill="#5B9E8A" opacity="0.2" stroke="#5B9E8A" strokeWidth="3" />
-        <rect x="90" y="280" width="240" height="140" fill="#FFFFFF" stroke="#5B9E8A" strokeWidth="3" />
-        <rect x="130" y="320" width="50" height="50" fill="#5B9E8A" opacity="0.3" />
-        <rect x="240" y="320" width="50" height="100" fill="#5B9E8A" opacity="0.5" />
-        <circle cx="210" cy="200" r="20" fill="#5B9E8A" opacity="0.15" />
-        <line x1="40" y1="420" x2="380" y2="420" stroke="#5B9E8A" strokeWidth="4" />
-      </g>
-    </svg>
-  );
-}
-
-function TourismVisual() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
-      <circle cx="250" cy="250" r="200" fill="#6A8EC4" opacity="0.08" stroke="#6A8EC4" strokeWidth="2" strokeDasharray="5 5" />
-      <path d="M 120 350 L 200 220 L 280 350 Z" fill="#6A8EC4" opacity="0.2" />
-      <path d="M 220 350 L 300 200 L 380 350 Z" fill="#6A8EC4" opacity="0.3" />
-      <circle cx="360" cy="120" r="35" fill="#FFB74D" opacity="0.6" />
-      <path d="M 100 200 C 180 100, 320 100, 400 200" fill="none" stroke="#6A8EC4" strokeWidth="3" strokeDasharray="8 4" />
-      <g transform="translate(235, 125) rotate(45)">
-        <path d="M0 0 L20 -10 L40 0 L20 40 Z" fill="#6A8EC4" />
-      </g>
-    </svg>
-  );
-}
-
-function RetailVisual() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
-      <rect x="60" y="60" width="380" height="380" rx="30" fill="#9A7EC0" opacity="0.05" />
-      <g transform="translate(110, 100)">
-        <path d="M 40 120 L 70 40 L 210 40 L 240 120 Z" fill="none" stroke="#9A7EC0" strokeWidth="4" strokeLinecap="round" />
-        <rect x="20" y="110" width="240" height="220" rx="12" fill="#9A7EC0" opacity="0.2" stroke="#9A7EC0" strokeWidth="3" />
-        <circle cx="140" cy="220" r="35" fill="#FFFFFF" opacity="0.7" />
-        <path d="M 120 220 H 160 M 140 200 V 240" stroke="#9A7EC0" strokeWidth="4" strokeLinecap="round" />
-      </g>
-      <circle cx="380" cy="120" r="25" fill="#9A7EC0" opacity="0.4" />
-    </svg>
-  );
-}
-
-function ClinicVisual() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style={{ width: "60%", height: "60%", opacity: 0.85 }}>
-      <circle cx="250" cy="250" r="210" fill="#5B9E8A" opacity="0.06" />
-      <g transform="translate(125, 125)">
-        <rect x="90" y="0" width="70" height="250" rx="10" fill="#5B9E8A" opacity="0.2" />
-        <rect x="0" y="90" width="250" height="70" rx="10" fill="#5B9E8A" opacity="0.2" />
-        <rect x="105" y="15" width="40" height="220" rx="4" fill="#5B9E8A" opacity="0.4" />
-        <rect x="15" y="105" width="220" height="40" rx="4" fill="#5B9E8A" opacity="0.4" />
-      </g>
-      <path d="M 50 400 Q 150 370 250 400 T 450 400" fill="none" stroke="#5B9E8A" strokeWidth="3" opacity="0.3" />
-    </svg>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Dynamic Visual Manager Component
-// ─────────────────────────────────────────────────────────────────────────────
-function IndustryVisual({ pattern }: { pattern: Industry["visualPattern"] }) {
-  return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        background: "linear-gradient(160deg, #0e1020 0%, #0b0d18 100%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "hidden",
-      }}
-    >
-      {pattern === "hospitality" && <HospitalityVisual />}
-      {pattern === "restaurant" && <RestaurantVisual />}
-      {pattern === "realestate" && <RealEstateVisual />}
-      {pattern === "tourism" && <TourismVisual />}
-      {pattern === "retail" && <RetailVisual />}
-      {pattern === "clinic" && <ClinicVisual />}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Fade in hook
-// ─────────────────────────────────────────────────────────────────────────────
-function useFadeIn() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.12 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  return { ref, visible };
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Industry section
-// ─────────────────────────────────────────────────────────────────────────────
-function IndustrySection({ ind }: { ind: Industry }) {
-  const { ref, visible } = useFadeIn();
-  const Icon = ind.icon;
-  const isMobile = useIsMobile();
-
-  // ── copy panel ────────────────────────────────────────────────────────────
-  const copyPanel = (
-    <div
-      style={{
-        padding: isMobile ? "3rem 1.4rem" : "5rem 4rem",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        position: "relative",
-        zIndex: 2,
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0px)" : "translateY(30px)",
-        transition: "opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1)",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.8rem", flexWrap: "wrap" }}>
-        <div
-          style={{
-            width: isMobile ? "42px" : "52px",
-            height: isMobile ? "42px" : "52px",
-            borderRadius: "16px",
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            backdropFilter: "blur(10px)",
-          }}
-        >
-          <Icon size={isMobile ? 18 : 22} color={ind.accent} />
-        </div>
-        <span
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: "0.58rem",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            color: "rgba(245,245,240,0.35)",
-          }}
-        >
-          {ind.index} — Industry System
-        </span>
-      </div>
-
-      <h2
-        style={{
-          fontFamily: "Space Grotesk, sans-serif",
-          fontWeight: 800,
-          fontSize: isMobile ? "clamp(2rem,10vw,3rem)" : "clamp(3rem,5vw,5rem)",
-          lineHeight: 0.92,
-          letterSpacing: "-0.05em",
-          color: "#f5f5f0",
-          marginBottom: "1rem",
-          maxWidth: "14ch",
-        }}
-      >
-        {ind.name}
-      </h2>
-
-      <p style={{ color: ind.accent, fontFamily: "Space Grotesk, sans-serif", fontStyle: "italic", fontSize: isMobile ? "0.95rem" : "1.1rem", lineHeight: 1.6, marginBottom: "1.5rem", maxWidth: "34rem" }}>
-        {ind.tagline}
-      </p>
-
-      <p style={{ fontFamily: "Space Grotesk, sans-serif", fontSize: isMobile ? "0.9rem" : "0.98rem", lineHeight: 1.9, color: "rgba(245,245,240,0.55)", maxWidth: "36rem", marginBottom: "1.4rem" }}>
-        {ind.insight}
-      </p>
-
-      {/* <div
-        style={{
-          display: "flex",
-          gap: "12px",
-          alignItems: "flex-start",
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          padding: isMobile ? "1rem" : "1.15rem",
-          borderRadius: "18px",
-          marginBottom: "2rem",
-          maxWidth: "36rem",
-          backdropFilter: "blur(8px)",
-        }}
-      >
-        <Sparkles size={16} color={ind.accent} style={{ marginTop: "2px", flexShrink: 0 }} />
-        <span style={{ fontFamily: "Space Grotesk, sans-serif", color: "rgba(245,245,240,0.48)", lineHeight: 1.7, fontSize: "0.85rem" }}>
-          {ind.painPoint}
-        </span>
-      </div> */}
-
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.65rem", marginBottom: "2.5rem" }}>
-        {ind.systems.map((s) => (
-          <div
+    <ul className="grid gap-x-8 sm:grid-cols-2">
+      {items.map((s) => {
+        const ms = s.includes("Microsoft");
+        return (
+          <li
             key={s}
-            style={{
-              padding: isMobile ? "0.5rem 0.7rem" : "0.55rem 0.9rem",
-              borderRadius: "999px",
-              border: "1px solid rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.03)",
-              color: "rgba(245,245,240,0.62)",
-              fontFamily: "Space Mono, monospace",
-              fontSize: "0.56rem",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-            }}
+            className="flex items-start gap-3 border-b border-white/[0.08] py-3 text-[15px] leading-6"
+            style={{ color: ms ? C.blue : "rgba(245,245,240,0.9)" }}
           >
+            <span
+              className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full"
+              style={{ background: ms ? C.blue : C.yellow }}
+            />
             {s}
-          </div>
-        ))}
-      </div>
-
-      {/* <Link
-        to="/discovery"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "10px",
-          width: "fit-content",
-          textDecoration: "none",
-          padding: isMobile ? "0.9rem 1.2rem" : "1rem 1.5rem",
-          borderRadius: "999px",
-          background: ind.accent,
-          color: "#05050a",
-          fontFamily: "Space Grotesk, sans-serif",
-          fontWeight: 700,
-          fontSize: "0.88rem",
-        }}
-      >
-        <span>Build Your System</span> 
-         <ArrowRight size={16} />
-      </Link> */}
-    </div>
-  );
-
-  // ── visual panel ──────────────────────────────────────────────────────────
-  const visualPanel = (
-    <div
-      style={{
-        height: isMobile ? "220px" : "100%",
-        minHeight: isMobile ? "auto" : "400px",
-        borderLeft: !isMobile && !ind.flip ? "1px solid rgba(255,255,255,0.05)" : "none",
-        borderRight: !isMobile && ind.flip ? "1px solid rgba(255,255,255,0.05)" : "none",
-      }}
-    >
-      <IndustryVisual pattern={ind.visualPattern} />
-    </div>
-  );
-
-  // ── layout: single consistent 3fr/2fr grid, children placed directly ─────
-  // flip=true  → visual (col 1) | copy (col 2)  — grid is still "3fr 2fr" but
-  //              we reverse by assigning gridColumn explicitly to each child
-  // flip=false → copy (col 1) | visual (col 2)  — natural DOM order
-  return (
-    <div
-      ref={ref}
-      style={{
-        display: "grid",
-        gridTemplateColumns: isMobile ? "1fr" : "3fr 2fr",
-        gridTemplateRows: isMobile ? "auto auto" : "auto",
-        borderBottom: "1px solid rgba(255,255,255,0.05)",
-        background: "#05050a",
-      }}
-    >
-      {isMobile ? (
-        // Mobile: visual on top, copy below
-        <>
-          <div>{visualPanel}</div>
-          <div>{copyPanel}</div>
-        </>
-      ) : ind.flip ? (
-        // Desktop flipped: visual in narrow col 1, copy in wide col 2
-        // Achieve by assigning explicit gridColumn to each child
-        <>
-          <div style={{ gridColumn: "1", gridRow: "1" }}>{visualPanel}</div>
-          <div style={{ gridColumn: "2", gridRow: "1" }}>{copyPanel}</div>
-        </>
-      ) : (
-        // Desktop normal: copy in wide col 1, visual in narrow col 2
-        <>
-          <div style={{ gridColumn: "1", gridRow: "1" }}>{copyPanel}</div>
-          <div style={{ gridColumn: "2", gridRow: "1" }}>{visualPanel}</div>
-        </>
-      )}
-    </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Primary Page Export
-// ─────────────────────────────────────────────────────────────────────────────
+function WorkLink({ work }: { work?: Industry["work"] }) {
+  if (!work) return null;
+  return (
+    <Link
+      to={work.to}
+      className="group inline-flex min-h-[44px] items-center gap-2 text-[15px] font-semibold text-white/90 underline decoration-white/30 underline-offset-[6px] transition-colors hover:text-[#E8C547]"
+    >
+      {work.label}
+      <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+    </Link>
+  );
+}
+
+/** Primary industry: large horizontal image with the name set into it, copy below. */
+function PrimaryIndustry({ ind, flip }: { ind: Industry; flip: boolean }) {
+  const media = MEDIA[INDUSTRY_MEDIA[ind.id]];
+  return (
+    <section
+      id={ind.id}
+      className="px-5 py-14 sm:px-8 lg:px-14 lg:py-20"
+      style={{ background: flip ? C.bgRaised : C.bg }}
+    >
+      <div className="mx-auto max-w-7xl">
+        {/* Large horizontal image with the industry name set into it */}
+        <Reveal className="relative">
+          <div className="relative aspect-[4/3] sm:aspect-[16/8] lg:aspect-[21/9]">
+            <MediaSlot
+              media={media}
+              fill
+              rounded="rounded-2xl"
+              sizes="(min-width: 1280px) 1200px, 100vw"
+              tagPosition={flip ? "top-left" : "top-right"}
+            />
+          </div>
+          <div
+            className="pointer-events-none absolute inset-0 rounded-2xl"
+            style={{
+              background: `linear-gradient(${flip ? "250deg" : "110deg"}, rgba(7,8,15,0.88) 0%, rgba(7,8,15,0.45) 45%, rgba(7,8,15,0) 75%)`,
+            }}
+          />
+          <div
+            className={`absolute bottom-0 p-6 sm:p-10 lg:p-12 ${flip ? "right-0 text-right" : "left-0"}`}
+          >
+            <span className={LABEL} style={{ fontFamily: F.mono, color: C.yellow }}>
+              Primary focus
+            </span>
+            <h2
+              className="mt-2"
+              style={{ ...TYPE.display, fontSize: "clamp(2.6rem,6.4vw,6rem)", color: C.text }}
+            >
+              {ind.name}
+            </h2>
+            <p className="mt-2 text-sm text-white/80">{ind.who}</p>
+          </div>
+        </Reveal>
+
+        {/* Copy in two columns beneath the image */}
+        <Reveal
+          className="mt-10 grid gap-10 lg:mt-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16"
+          delay={0.05}
+        >
+          <div>
+            <p
+              className="mb-4 text-[#f5f5f0]"
+              style={{ ...TYPE.h3, fontSize: "clamp(1.4rem,2.2vw,1.9rem)", lineHeight: 1.3 }}
+            >
+              {ind.tagline}
+            </p>
+            <p className="mb-8 max-w-xl text-base leading-8" style={{ color: C.body }}>
+              {ind.insight}
+            </p>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <Cta to="/discovery">Book a Discovery Call</Cta>
+              <WorkLink work={ind.work} />
+            </div>
+          </div>
+          <div>
+            <div className={`${LABEL} mb-2`} style={{ fontFamily: F.mono, color: C.muted }}>
+              How we help
+            </div>
+            <HowWeHelp items={ind.systems} />
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/** Secondary industry: compact editorial row, no imagery. */
+function SecondaryIndustry({ ind }: { ind: Industry }) {
+  return (
+    <article
+      id={ind.id}
+      className="grid gap-5 border-t border-white/10 py-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16"
+    >
+      <div>
+        <h3 style={{ ...TYPE.h2, fontSize: "clamp(1.7rem,2.8vw,2.4rem)", color: C.text }}>
+          {ind.name}
+        </h3>
+        <p className="mt-1 text-sm" style={{ color: C.muted }}>
+          {ind.who}
+        </p>
+      </div>
+      <div>
+        <p className="mb-2 text-lg leading-8 text-[#f5f5f0]" style={{ fontFamily: F.display }}>
+          {ind.tagline}
+        </p>
+        <p className="mb-5 max-w-2xl text-base leading-8" style={{ color: C.body }}>
+          {ind.insight}
+        </p>
+        <p className="text-[15px] leading-7 text-white/85">
+          <span className={`${LABEL} mr-3`} style={{ fontFamily: F.mono, color: C.muted }}>
+            How we help
+          </span>
+          {ind.systems.map((s, i) => (
+            <span key={s}>
+              <span
+                className="whitespace-nowrap"
+                style={{ color: s.includes("Microsoft") ? C.blue : undefined }}
+              >
+                {s}
+              </span>
+              {i < ind.systems.length - 1 && (
+                <span className="px-2 text-white/30" aria-hidden="true">
+                  ·
+                </span>
+              )}{" "}
+            </span>
+          ))}
+        </p>
+        {ind.work && (
+          <div className="mt-3">
+            <WorkLink work={ind.work} />
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
+
 export default function IndustriesPage() {
+  const primary = INDUSTRIES.filter((i) => i.primary);
+  const secondary = INDUSTRIES.filter((i) => !i.primary);
+
   return (
     <PageShell>
-      <Helmet>
-        <title>Industry Systems — Framework</title>
-      </Helmet>
-      <div style={{ background: "#05050a", minHeight: "100vh" }}>
-        {INDUSTRIES.map((ind) => (
-          <IndustrySection key={ind.id} ind={ind} />
-        ))}
-      </div>
+      <Seo
+        title="Industries | TODO Growth"
+        description="TODO Growth works primarily with hospitality, tourism and real estate businesses, and also serves restaurants, retail, clinics and NGOs across Rwanda and East Africa."
+        path="/industries"
+      />
+
+      <PageHero
+        compact
+        eyebrow="Industries"
+        title="Built for businesses that sell experiences and spaces."
+        intro="Hospitality, tourism and real estate are where we focus most. These businesses win or lose customers on presentation, trust and how easy it is to book or inquire. We bring the same approach to restaurants, retail, clinics, and NGOs & development organizations."
+      >
+        <nav aria-label="Industries" className="flex flex-wrap gap-x-6 gap-y-1">
+          {INDUSTRIES.map((i) => (
+            <a
+              key={i.id}
+              href={`#${i.id}`}
+              className="inline-flex min-h-[44px] items-center text-[15px] transition-colors hover:text-[#E8C547]"
+              style={{ color: i.primary ? C.text : C.muted, fontWeight: i.primary ? 600 : 400 }}
+            >
+              {i.name}
+            </a>
+          ))}
+        </nav>
+      </PageHero>
+
+      {primary.map((ind, i) => (
+        <PrimaryIndustry key={ind.id} ind={ind} flip={i % 2 === 1} />
+      ))}
+
+      <section className="px-5 py-16 sm:px-8 lg:px-14 lg:py-24" style={{ background: C.bgInk }}>
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
+            <h2 style={{ ...TYPE.h2, color: C.text }}>Also serving</h2>
+            <p className="text-sm" style={{ color: C.muted }}>
+              The same growth system, applied to other sectors.
+            </p>
+          </div>
+          {secondary.map((ind) => (
+            <Reveal key={ind.id}>
+              <SecondaryIndustry ind={ind} />
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <FinalCta
+        variant="split"
+        title="Don't see your industry?"
+        body="If your business depends on how customers see you, find you and trust you, we can probably help. Book a Discovery Call and tell us what you want to improve."
+      />
     </PageShell>
   );
 }

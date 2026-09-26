@@ -1,12 +1,15 @@
 /* App.tsx */
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
 import Index from "./Pages/index";
-import ApproachPage from "./Pages/approach";
+import AboutPage from "./Pages/about";
 import Contact from "./Pages/contact";
 import Discovery from "./Pages/discovery";
 import Industries from "./Pages/industries";
 import Packages from "./Pages/packages";
+import Services from "./Pages/services";
+import Portfolio from "./Pages/portfolio";
+import NotFound from "./Pages/not-found";
 
 // Theme variables export for use in components if needed
 export const theme = {
@@ -42,14 +45,16 @@ export const theme = {
 export default function App() {
   return (
     <Routes>
-      
       <Route path="/" element={<Index />} />
-      <Route path="/approach" element={<ApproachPage />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/discovery" element={<Discovery />} />
-      <Route path="/industries" element={<Industries />} />
+      <Route path="/services" element={<Services />} />
       <Route path="/packages" element={<Packages />} />
-      
+      <Route path="/industries" element={<Industries />} />
+      <Route path="/portfolio" element={<Portfolio />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/approach" element={<Navigate to="/about" replace />} />
+      <Route path="/discovery" element={<Discovery />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
