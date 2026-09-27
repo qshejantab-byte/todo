@@ -36,7 +36,18 @@ const rgba = (hex: string, a: number) =>
   `rgba(${parseInt(hex.slice(1, 3), 16)},${parseInt(hex.slice(3, 5), 16)},${parseInt(hex.slice(5, 7), 16)},${a})`;
 const rad = (d: number) => (d * Math.PI) / 180;
 
-export function GrowthDiagram({ className = "" }: { className?: string }) {
+/**
+ * `compact`: the mobile hero version. Same system (logo hub, stage arcs and
+ * colors, nodes, pulse) with the per-service labels removed and a larger hub,
+ * so it reads clearly at ~220px.
+ */
+export function GrowthDiagram({
+  className = "",
+  compact = false,
+}: {
+  className?: string;
+  compact?: boolean;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { ref: wrapRef, inView } = useInView<HTMLDivElement>();
   const reduced = usePrefersReducedMotion();
@@ -67,7 +78,7 @@ export function GrowthDiagram({ className = "" }: { className?: string }) {
       const t = Math.max(0, now - start) / 1000;
       const cx = W / 2;
       const cy = W / 2;
-      const R = W * 0.34;
+      const R = W * (compact ? 0.3 : 0.34);
       const small = W < 420;
       ctx.clearRect(0, 0, W, W);
 
@@ -82,7 +93,7 @@ export function GrowthDiagram({ className = "" }: { className?: string }) {
         ctx.stroke();
 
         const mid = rad((a0 + a1) / 2);
-        const lr = R + W * (small ? 0.13 : 0.12);
+        const lr = R + W * (compact ? 0.155 : small ? 0.13 : 0.12);
         ctx.font = `600 ${small ? 11 : 12}px "Space Mono", monospace`;
         ctx.fillStyle = rgba(STAGE_COLOR[st], 0.95);
         ctx.textAlign = "center";
@@ -127,7 +138,7 @@ export function GrowthDiagram({ className = "" }: { className?: string }) {
         const x = cx + Math.cos(a) * R;
         const y = cy + Math.sin(a) * R;
         const c = STAGE_COLOR[n.stage];
-        const r = n.major ? W * 0.034 : W * 0.018;
+        const r = n.major ? W * 0.034 : W * (compact ? 0.024 : 0.018);
 
         const g = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
         g.addColorStop(0, rgba(c, 0.3));
@@ -157,6 +168,8 @@ export function GrowthDiagram({ className = "" }: { className?: string }) {
           ctx.restore();
         }
 
+        if (compact) return; // stage labels carry the meaning at this size
+
         // Labels sit on the inside of the ring so they never clip.
         const inward = R - r - (small ? 12 : 16);
         const lx = cx + Math.cos(a) * inward;
@@ -171,7 +184,7 @@ export function GrowthDiagram({ className = "" }: { className?: string }) {
       });
 
       // Hub: the TODO logo, unchanged, on a soft yellow halo
-      const hub = W * 0.075;
+      const hub = W * (compact ? 0.1 : 0.075);
       const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, hub * 2.6);
       halo.addColorStop(0, "rgba(232,197,71,0.22)");
       halo.addColorStop(1, "rgba(232,197,71,0)");
@@ -207,7 +220,7 @@ export function GrowthDiagram({ className = "" }: { className?: string }) {
       ro.disconnect();
       logo.onload = null;
     };
-  }, [inView, reduced]);
+  }, [inView, reduced, compact]);
 
   return (
     <div ref={wrapRef} className={`relative aspect-square w-full ${className}`}>

@@ -93,16 +93,17 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-6 pb-14 pt-10 lg:min-h-[calc(100svh-76px)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:py-12">
-          <div>
-            <div className="anim-up" style={{ animationDelay: "0.05s" }}>
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-6 pb-10 pt-8 md:pb-14 md:pt-10 lg:min-h-[calc(100svh-76px)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:py-12">
+          {/* Below md the column is a flex stack so the mobile composition can reorder. */}
+          <div className="flex flex-col md:block">
+            <div className="anim-up order-1" style={{ animationDelay: "0.05s" }}>
               <Eyebrow color={C.yellow} line>
                 Kigali, Rwanda · Growth infrastructure
               </Eyebrow>
             </div>
 
             <h1
-              className="anim-up mb-7 max-w-[13ch] text-[#f5f5f0]"
+              className="anim-up order-2 mb-5 max-w-[13ch] text-[#f5f5f0] md:mb-7"
               style={{ animationDelay: "0.1s", ...TYPE.display }}
             >
               We help hospitality, tourism & real estate businesses{" "}
@@ -110,7 +111,7 @@ export default function HomePage() {
             </h1>
 
             <ul
-              className="anim-up mb-7 flex flex-wrap gap-x-4 gap-y-2"
+              className="anim-up order-3 mb-2 flex flex-wrap gap-x-3 gap-y-1.5 border-t border-white/10 pt-4 md:mb-7 md:gap-x-4 md:gap-y-2 md:border-0 md:pt-0"
               style={{ animationDelay: "0.15s" }}
               aria-label="What we do"
             >
@@ -131,7 +132,7 @@ export default function HomePage() {
             </ul>
 
             <p
-              className="anim-up mb-9 max-w-xl text-base leading-8 sm:text-[17px]"
+              className="anim-up order-6 mt-7 max-w-xl text-[15px] leading-7 md:mb-9 md:mt-0 md:text-[17px] md:leading-8"
               style={{ animationDelay: "0.2s", color: C.body }}
             >
               We help businesses grow, commercialize and transform through practical digital
@@ -139,8 +140,57 @@ export default function HomePage() {
               efficiency.
             </p>
 
+            {/* ── Mobile: atmosphere + compact signature diagram ── */}
             <div
-              className="anim-up flex flex-col gap-3 sm:flex-row sm:items-center"
+              className="anim-up relative order-4 -mx-5 h-[268px] sm:-mx-8 md:hidden"
+              style={{ animationDelay: "0.18s" }}
+            >
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  maskImage: "linear-gradient(180deg, transparent 0%, #000 30%)",
+                  WebkitMaskImage: "linear-gradient(180deg, transparent 0%, #000 30%)",
+                }}
+              >
+                <MediaSlot
+                  media={MEDIA.heroAmbient}
+                  fill
+                  rounded="rounded-none"
+                  sizes="100vw"
+                  position="center 65%"
+                  imgClassName="opacity-[0.45]"
+                  tagPosition="left"
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(34% 50% at 50% 50%, rgba(11,13,23,0.7) 0%, rgba(11,13,23,0) 100%), linear-gradient(180deg, rgba(11,13,23,0) 55%, rgba(11,13,23,0.85) 100%)",
+                  }}
+                />
+              </div>
+              {/* Diagram sits in the top 236px; the tag gets the strip below it. */}
+              <div className="relative mx-auto h-[236px] w-[236px]">
+                <GrowthDiagram compact />
+              </div>
+            </div>
+
+            {/* ── Mobile CTA: primary dominant, secondary as an editorial link ── */}
+            <div className="anim-up order-5 mt-5 md:hidden" style={{ animationDelay: "0.24s" }}>
+              <Cta to="/discovery" className="w-full">
+                Book a Discovery Call
+              </Cta>
+              <div className="mt-2 flex items-center gap-4">
+                <span className="h-px flex-1 bg-white/15" aria-hidden="true" />
+                <Cta to="/services" variant="link">
+                  View Services
+                </Cta>
+              </div>
+            </div>
+
+            <div
+              className="anim-up hidden gap-3 md:flex md:flex-row md:items-center"
               style={{ animationDelay: "0.26s" }}
             >
               <Cta to="/discovery">Book a Discovery Call</Cta>
@@ -150,7 +200,7 @@ export default function HomePage() {
             </div>
 
             <p
-              className="anim-up mt-7 max-w-md border-l-2 pl-4 text-sm leading-6"
+              className="anim-up order-7 mt-6 max-w-md border-l-2 pl-4 text-sm leading-6 md:mt-7"
               style={{ animationDelay: "0.32s", color: C.muted, borderColor: C.yellow }}
             >
               No long consulting engagements. Just clear solutions designed to deliver measurable
@@ -158,7 +208,8 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="relative -mx-5 px-5 py-4 sm:-mx-8 sm:px-8 lg:m-0 lg:p-0">
+          {/* Tablet stacked diagram + desktop right column (mobile uses the compact band above). */}
+          <div className="relative -mx-5 hidden px-5 py-4 sm:-mx-8 sm:px-8 md:block lg:m-0 lg:p-0">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 lg:hidden"
