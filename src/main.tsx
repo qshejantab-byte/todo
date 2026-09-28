@@ -9,8 +9,8 @@ import ScrollToTop from "./components/ScrollToTop";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-    <ScrollToTop />
+      <ScrollToTop />
       <App />
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );

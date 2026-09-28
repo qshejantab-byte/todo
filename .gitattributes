@@ -1,0 +1,19 @@
+# Use LF line endings for text files in the repository and in every working
+# copy, regardless of each machine's core.autocrlf setting. Prettier (and the
+# ESLint prettier rule) expect LF, so CRLF checkouts would fail lint.
+* text=auto eol=lf
+
+# Binary assets: never touch line endings.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.gif binary
+*.ico binary
+*.mp4 binary
+*.webm binary
+*.woff binary
+*.woff2 binary
+*.zip binary
+*.pdf binary

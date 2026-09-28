@@ -38,6 +38,9 @@ const INDUSTRY_MEDIA = {
   tourism: "tourism",
   realestate: "realestate",
 } as const;
+// Eased fade at both edges of the mobile media band so it dissolves into the hero.
+const BAND_MASK =
+  "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.25) 12%, rgba(0,0,0,0.7) 24%, #000 36%, #000 58%, rgba(0,0,0,0.7) 72%, rgba(0,0,0,0.25) 86%, transparent 100%)";
 const STAGE_ORDER = [
   "branding",
   "websites",
@@ -93,17 +96,17 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-6 pb-10 pt-8 md:pb-14 md:pt-10 lg:min-h-[calc(100svh-76px)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:py-12">
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-6 pb-10 pt-5 md:pb-14 md:pt-10 lg:min-h-[calc(100svh-76px)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:py-12">
           {/* Below md the column is a flex stack so the mobile composition can reorder. */}
           <div className="flex flex-col md:block">
             <div className="anim-up order-1" style={{ animationDelay: "0.05s" }}>
-              <Eyebrow color={C.yellow} line>
+              <Eyebrow color={C.yellow} line className="mb-3 md:mb-5">
                 Kigali, Rwanda · Growth infrastructure
               </Eyebrow>
             </div>
 
             <h1
-              className="anim-up order-2 mb-5 max-w-[13ch] text-[#f5f5f0] md:mb-7"
+              className="anim-up order-2 mb-4 max-w-[13ch] text-[#f5f5f0] md:mb-7"
               style={{ animationDelay: "0.1s", ...TYPE.display }}
             >
               We help hospitality, tourism & real estate businesses{" "}
@@ -111,7 +114,7 @@ export default function HomePage() {
             </h1>
 
             <ul
-              className="anim-up order-3 mb-2 flex flex-wrap gap-x-3 gap-y-1.5 border-t border-white/10 pt-4 md:mb-7 md:gap-x-4 md:gap-y-2 md:border-0 md:pt-0"
+              className="anim-up order-3 mb-2 flex flex-wrap gap-x-3 gap-y-1.5 border-t border-white/10 pt-3 md:mb-7 md:gap-x-4 md:gap-y-2 md:border-0 md:pt-0"
               style={{ animationDelay: "0.15s" }}
               aria-label="What we do"
             >
@@ -132,7 +135,7 @@ export default function HomePage() {
             </ul>
 
             <p
-              className="anim-up order-6 mt-7 max-w-xl text-[15px] leading-7 md:mb-9 md:mt-0 md:text-[17px] md:leading-8"
+              className="anim-up relative z-10 order-4 mt-3 max-w-xl text-[15px] leading-[26px] md:mb-9 md:mt-0 md:text-[17px] md:leading-8"
               style={{ animationDelay: "0.2s", color: C.body }}
             >
               We help businesses grow, commercialize and transform through practical digital
@@ -142,15 +145,16 @@ export default function HomePage() {
 
             {/* ── Mobile: atmosphere + compact signature diagram ── */}
             <div
-              className="anim-up relative order-4 -mx-5 h-[268px] sm:-mx-8 md:hidden"
+              className="anim-up relative order-5 -mx-5 -mt-8 h-[244px] sm:-mx-8 md:hidden"
               style={{ animationDelay: "0.18s" }}
             >
+              {/* Atmosphere fades in and out at both edges, so it reads as part of the hero. */}
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0"
                 style={{
-                  maskImage: "linear-gradient(180deg, transparent 0%, #000 30%)",
-                  WebkitMaskImage: "linear-gradient(180deg, transparent 0%, #000 30%)",
+                  maskImage: BAND_MASK,
+                  WebkitMaskImage: BAND_MASK,
                 }}
               >
                 <MediaSlot
@@ -159,25 +163,35 @@ export default function HomePage() {
                   rounded="rounded-none"
                   sizes="100vw"
                   position="center 65%"
-                  imgClassName="opacity-[0.45]"
-                  tagPosition="left"
+                  imgClassName="opacity-[0.46]"
+                  tag={false}
                 />
                 <div
                   className="absolute inset-0"
                   style={{
                     background:
-                      "radial-gradient(34% 50% at 50% 50%, rgba(11,13,23,0.7) 0%, rgba(11,13,23,0) 100%), linear-gradient(180deg, rgba(11,13,23,0) 55%, rgba(11,13,23,0.85) 100%)",
+                      "radial-gradient(34% 48% at 50% 50%, rgba(11,13,23,0.72) 0%, rgba(11,13,23,0) 100%), linear-gradient(90deg, rgba(11,13,23,0.6) 0%, rgba(11,13,23,0) 24%, rgba(11,13,23,0) 76%, rgba(11,13,23,0.6) 100%)",
                   }}
                 />
               </div>
-              {/* Diagram sits in the top 236px; the tag gets the strip below it. */}
-              <div className="relative mx-auto h-[236px] w-[236px]">
-                <GrowthDiagram compact />
+              <div className="relative mx-auto flex h-full w-[236px] items-center">
+                <div className="h-[236px] w-[236px]">
+                  <GrowthDiagram compact />
+                </div>
               </div>
+              {/* Discreet temporary-media note; disappears once a real asset is set. */}
+              {MEDIA.heroAmbient.status === "temporary" && (
+                <span
+                  className="absolute right-2 top-1/2 origin-center translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[9px] uppercase tracking-[0.14em]"
+                  style={{ fontFamily: F.mono, color: "rgba(245,245,240,0.28)" }}
+                >
+                  Illustrative image
+                </span>
+              )}
             </div>
 
             {/* ── Mobile CTA: primary dominant, secondary as an editorial link ── */}
-            <div className="anim-up order-5 mt-5 md:hidden" style={{ animationDelay: "0.24s" }}>
+            <div className="anim-up order-6 mt-1 md:hidden" style={{ animationDelay: "0.24s" }}>
               <Cta to="/discovery" className="w-full">
                 Book a Discovery Call
               </Cta>
@@ -200,7 +214,7 @@ export default function HomePage() {
             </div>
 
             <p
-              className="anim-up order-7 mt-6 max-w-md border-l-2 pl-4 text-sm leading-6 md:mt-7"
+              className="anim-up order-7 mt-4 max-w-md border-l-2 pl-4 text-sm leading-6 md:mt-7"
               style={{ animationDelay: "0.32s", color: C.muted, borderColor: C.yellow }}
             >
               No long consulting engagements. Just clear solutions designed to deliver measurable
