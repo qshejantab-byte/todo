@@ -11,7 +11,7 @@ export const COMPANY = {
   positioning: "Growth, Commercialization & Digital Transformation",
   geography: "Rwanda-based, serving East Africa and beyond.",
   city: "Kigali, Rwanda",
-  email: "info@todo.rw",
+  email: "richie@todo.rw",
   phoneDisplay: "0799537999",
   // Same number in international format (Rwanda, +250) for WhatsApp and tel: links.
   phoneTel: "+250799537999",
