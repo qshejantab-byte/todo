@@ -47,7 +47,6 @@ function PackageRow({ pkg, index }: { pkg: Package; index: number }) {
           rounded="rounded-none"
           sizes="(min-width: 1024px) 45vw, 100vw"
           imgClassName="opacity-[0.24]"
-          tagPosition="right"
         />
       </div>
 

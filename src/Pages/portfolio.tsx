@@ -275,13 +275,7 @@ function SvfSection({ p }: { p: Project }) {
   return (
     <section id={p.id} style={{ background: C.bgInk }}>
       <div className="relative aspect-[4/3] sm:aspect-[16/8] lg:aspect-[21/9]">
-        <MediaSlot
-          media={MEDIA.svfLead}
-          fill
-          rounded="rounded-none"
-          sizes="100vw"
-          tagPosition="right"
-        />
+        <MediaSlot media={MEDIA.svfLead} fill rounded="rounded-none" sizes="100vw" />
         <div
           className="pointer-events-none absolute inset-0"
           style={{

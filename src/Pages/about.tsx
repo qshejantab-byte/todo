@@ -178,13 +178,7 @@ export default function AboutPage() {
       {/* ── Atmospheric band: breaks the long text run (replaceable: MEDIA.aboutBand) ── */}
       <section style={{ background: C.bgInk }}>
         <div className="relative aspect-[16/9] sm:aspect-[21/8] lg:aspect-[21/7]">
-          <MediaSlot
-            media={MEDIA.aboutBand}
-            fill
-            rounded="rounded-none"
-            sizes="100vw"
-            tagPosition="right"
-          />
+          <MediaSlot media={MEDIA.aboutBand} fill rounded="rounded-none" sizes="100vw" />
         </div>
       </section>
 

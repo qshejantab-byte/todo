@@ -6,6 +6,11 @@ import { SERVICE_OPTIONS } from "@/content/site";
 const EMAILJS_SERVICE_ID = "service_tyheci5";
 const EMAILJS_PUBLIC_KEY = "C7fH5rnk5-9g05t9A";
 
+// Where form submissions go. Sent as `to_email`; each EmailJS template's
+// "To Email" setting must be {{to_email}} for this to take effect.
+// (The public contact address shown on the site stays COMPANY.email.)
+export const INQUIRY_RECIPIENT = "richie@todo.rw";
+
 export const EMAILJS_TEMPLATES = {
   discovery: "template_q0zx8tz",
   quote: "template_0n9539s",
@@ -66,6 +71,7 @@ export function buildTemplateParams(type: InquiryType, f: Inquiry) {
 
   return {
     ...fields,
+    to_email: INQUIRY_RECIPIENT,
     inquiry_type: type === "discovery" ? "Discovery Call" : "Request a Quote",
     reply_to: fields.email,
     // Legacy variable names used by the existing templates.

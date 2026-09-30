@@ -81,7 +81,6 @@ export default function HomePage() {
             sizes="100vw"
             position="center"
             imgClassName="opacity-[0.62]"
-            tag={false}
           />
           <div className="absolute inset-0" style={{ background: MOBILE_HERO_SHADE }} />
         </div>
@@ -103,7 +102,6 @@ export default function HomePage() {
             priority
             sizes="62vw"
             imgClassName="opacity-[0.38]"
-            tagPosition="right"
           />
           <div
             className="absolute inset-0"
@@ -227,7 +225,6 @@ export default function HomePage() {
                 rounded="rounded-none"
                 sizes="100vw"
                 imgClassName="opacity-[0.32]"
-                tagPosition="right"
               />
               <div
                 className="absolute inset-0"
@@ -536,7 +533,6 @@ export default function HomePage() {
                   rounded="rounded-xl"
                   sizes="(min-width: 768px) 45vw, 100vw"
                   imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
-                  tagPosition="right"
                 />
               </Link>
             </li>

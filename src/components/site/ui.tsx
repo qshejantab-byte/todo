@@ -373,12 +373,6 @@ export function PageHero({
  * A replaceable image slot. The slot owns the aspect ratio and crop, so a new
  * asset can be dropped into the registry without changing any layout.
  */
-const TAG_POSITION = {
-  left: "bottom-3 left-3",
-  right: "bottom-3 right-3",
-  "top-left": "top-3 left-3",
-  "top-right": "top-3 right-3",
-} as const;
 
 export function MediaSlot({
   media,
@@ -391,8 +385,6 @@ export function MediaSlot({
   overlay = false,
   rounded = "rounded-2xl",
   fill = false,
-  tagPosition = "left",
-  tag = true,
   motion,
 }: {
   media: MediaAsset;
@@ -406,9 +398,6 @@ export function MediaSlot({
   rounded?: string;
   /** Fill the positioned parent instead of using an aspect ratio. */
   fill?: boolean;
-  tagPosition?: "left" | "right" | "top-left" | "top-right";
-  /** Show the "Illustrative image" tag on temporary media (default true). */
-  tag?: boolean;
   /** "drift": very slow cinematic scale/pan on stills. Paused off-screen and for reduced motion. */
   motion?: "drift";
 }) {
@@ -472,18 +461,6 @@ export function MediaSlot({
             background: "linear-gradient(180deg, rgba(7,8,15,0) 40%, rgba(7,8,15,0.75) 100%)",
           }}
         />
-      )}
-      {tag && media.status === "temporary" && media.tagged !== false && (
-        <figcaption
-          className={`absolute z-10 rounded-full ${TAG_POSITION[tagPosition]} px-2.5 py-1 text-[11px] tracking-[0.06em]`}
-          style={{
-            background: "rgba(7,8,15,0.7)",
-            color: "rgba(245,245,240,0.8)",
-            fontFamily: F.mono,
-          }}
-        >
-          Illustrative image
-        </figcaption>
       )}
     </figure>
   );
@@ -594,7 +571,6 @@ export function FinalCta({
           rounded="rounded-none"
           imgClassName="opacity-50"
           sizes="100vw"
-          tagPosition="right"
         />
         <div
           className="pointer-events-none absolute inset-0"

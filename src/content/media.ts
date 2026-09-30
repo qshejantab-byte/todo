@@ -2,9 +2,8 @@
 // temporary image can be replaced with a real TODO asset by editing one entry.
 //
 // status "real"      → TODO's own work or photography, or a screenshot of a site TODO built.
-// status "temporary" → licensed development imagery (Unsplash License) used only
-//                      to establish layout. Rendered with an "Illustrative image"
-//                      tag so it is never presented as TODO's work.
+// status "temporary" → licensed stock imagery (Unsplash License), awaiting
+//                      replacement with TODO's own photography.
 //
 // To replace a temporary image: drop the new files into src/assets/media/,
 // import them below, update `src`/`srcSet`/`alt`, and set status to "real".
@@ -60,8 +59,6 @@ export interface MediaAsset {
   /** Where the asset came from. Kept for licensing and replacement tracking. */
   source: string;
   video?: { src: string; type?: string };
-  /** false hides the "Illustrative image" tag on a temporary asset (status and source are kept). */
-  tagged?: boolean;
   /** Default object-position (focal point) wherever the slot is cropped; a page can override it. */
   focus?: string;
 }
@@ -147,7 +144,7 @@ export const MEDIA = {
     // Desktop crops this to 4:3: hold the laptop and right-hand monitor.
     focus: "62% center",
   },
-  // Stock (Unsplash License): camera lenses for content production. Tag hidden on request.
+  // Stock (Unsplash License): camera lenses for content production.
   stageAttract: {
     kind: "image",
     ...pair(lenses800, lenses1600, 800, 1600),
@@ -155,7 +152,6 @@ export const MEDIA = {
     status: "temporary",
     category: "service",
     source: UNSPLASH.lenses,
-    tagged: false,
   },
 
   // ── Packages: one narrow strip per package (temporary) ──────────────────────
@@ -202,7 +198,6 @@ export const MEDIA = {
     status: "temporary",
     category: "industry",
     source: UNSPLASH.gorilla,
-    tagged: false,
   },
   realestate: {
     kind: "image",
@@ -211,7 +206,6 @@ export const MEDIA = {
     status: "temporary",
     category: "industry",
     source: UNSPLASH.hillsideBuilding,
-    tagged: false,
   },
 
   // ── Portfolio (real: screenshots of sites TODO built) ───────────────────────

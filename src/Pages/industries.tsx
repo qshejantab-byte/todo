@@ -203,7 +203,6 @@ function PrimaryIndustry({ ind, flip }: { ind: Industry; flip: boolean }) {
               fill
               rounded="rounded-2xl"
               sizes="(min-width: 1280px) 1200px, 100vw"
-              tagPosition={flip ? "top-left" : "top-right"}
             />
           </div>
           <div
