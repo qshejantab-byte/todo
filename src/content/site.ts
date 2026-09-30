@@ -449,6 +449,67 @@ export const PROJECTS: Project[] = [
   },
 ];
 
+// Additional client work: confirmed facts only. `summary` is client context (what
+// the client is), kept separate from `delivered` (what TODO confirmed it did).
+// Optional fields render only when present; leave them out until confirmed.
+// No results or metrics beyond those confirmed.
+export interface AdditionalWork {
+  id: string;
+  index: string;
+  client: string;
+  category: string;
+  accent: string;
+  metric?: string;
+  location?: string;
+  focus?: string;
+  url?: string;
+  domain?: string;
+  summary?: string;
+  delivered?: { label: string; service: ServiceId }[];
+  purpose?: string[];
+}
+
+export const ADDITIONAL_WORK: AdditionalWork[] = [
+  {
+    id: "nuttintodo",
+    index: "04",
+    client: "NuttinTODO",
+    category: "Travel · Experiences",
+    accent: "#C4B49C", // neutral sand until NuttinTODO brand assets arrive
+    location: "Kigali, Rwanda",
+    focus: "Brand & website",
+    url: "https://www.nuttintodo.com/",
+    domain: "nuttintodo.com",
+    // Client context from nuttintodo.com (researched September 2026).
+    summary:
+      "A marketplace where travelers discover and book authentic experiences with local hosts across Africa, from culture and craft to nature and adventure.",
+    delivered: [
+      { label: "Branding", service: "branding" },
+      { label: "Website design & development", service: "websites" },
+    ],
+    purpose: [
+      "Give the platform a clear, recognizable identity",
+      "Help travelers discover and book authentic local experiences online",
+    ],
+  },
+  {
+    id: "rwanda-mango-fest",
+    index: "05",
+    client: "Rwanda Mango Fest",
+    category: "Event",
+    accent: "#E8C547",
+    metric: "+1,000 attendees",
+  },
+  {
+    id: "rwanda-summer-fest",
+    index: "06",
+    client: "Rwanda Summer Fest",
+    category: "Event",
+    accent: "#E8C547",
+    metric: "+1,000 attendees",
+  },
+];
+
 // ─── Inquiry form options (Discovery Call + Request a Quote) ─────────────────
 export const SERVICE_OPTIONS: { value: string; label: string; group: string }[] = [
   ...SERVICES.map((s) => ({ value: s.id, label: s.name, group: "Services" })),

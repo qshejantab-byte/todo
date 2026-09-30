@@ -7,14 +7,15 @@ import {
   TYPE,
   LABEL,
   Seo,
+  Eyebrow,
   PageHero,
   Reveal,
   FinalCta,
   MediaSlot,
 } from "@/components/site/ui";
 import { BrowserShot, PhoneShot } from "@/components/site/work";
-import { PROJECTS, type Project } from "@/content/site";
-import { MEDIA, PROJECT_MEDIA, type ProjectMediaKind } from "@/content/media";
+import { ADDITIONAL_WORK, PROJECTS, type AdditionalWork, type Project } from "@/content/site";
+import { MEDIA, PROJECT_MEDIA, WORK_MEDIA, type ProjectMediaKind } from "@/content/media";
 
 // ─── Shared project parts ────────────────────────────────────────────────────
 function ProjectTitle({ p }: { p: Project }) {
@@ -55,7 +56,7 @@ function Label({ children, color = C.muted }: { children: React.ReactNode; color
   );
 }
 
-function Delivered({ p }: { p: Project }) {
+function Delivered({ p }: { p: Pick<Project, "delivered" | "accent"> }) {
   return (
     <div>
       <Label>What we delivered</Label>
@@ -104,7 +105,7 @@ function Upcoming({ p }: { p: Project }) {
   );
 }
 
-function Purpose({ p }: { p: Project }) {
+function Purpose({ p }: { p: Pick<Project, "purpose" | "accent" | "results"> }) {
   return (
     <div>
       <Label>What this work is designed to do</Label>
@@ -132,7 +133,7 @@ function Purpose({ p }: { p: Project }) {
   );
 }
 
-function LiveLink({ p }: { p: Project }) {
+function LiveLink({ p }: { p: Pick<Project, "url" | "domain"> }) {
   return (
     <a
       href={p.url}
@@ -321,13 +322,135 @@ function SvfSection({ p }: { p: Project }) {
   );
 }
 
+// ─── 04–06 More work: compact client sections, media-led once assets exist ───
+function MoreWorkHead({ w }: { w: AdditionalWork }) {
+  return (
+    <div>
+      <div className="mb-3 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <span
+          className="leading-none"
+          style={{ ...TYPE.display, fontSize: "clamp(2.2rem,4vw,3.6rem)", color: w.accent }}
+        >
+          {w.index}
+        </span>
+        <span className={LABEL} style={{ fontFamily: F.mono, color: w.accent }}>
+          {w.category}
+        </span>
+      </div>
+      <h3
+        className="mb-3"
+        style={{ ...TYPE.display, fontSize: "clamp(2rem,4.4vw,3.8rem)", color: C.text }}
+      >
+        {w.client}
+      </h3>
+      {(w.location || w.focus) && (
+        <p className="mb-2 text-sm" style={{ color: C.muted }}>
+          {[w.location, w.focus && `Focus: ${w.focus}`].filter(Boolean).join(" · ")}
+        </p>
+      )}
+      {w.summary && (
+        <p className="max-w-xl text-base leading-8" style={{ color: C.body }}>
+          {w.summary}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** Confirmed metric, set as the entry's visual until real event media exists. */
+function MetricFigure({ w }: { w: AdditionalWork }) {
+  if (!w.metric) return null;
+  const [figure, ...rest] = w.metric.split(" ");
+  return (
+    <div className="border-l-2 pl-5 md:pl-7" style={{ borderColor: w.accent }}>
+      <div
+        className="leading-none"
+        style={{ ...TYPE.display, fontSize: "clamp(2.8rem,6vw,5.2rem)", color: C.text }}
+      >
+        {figure}
+      </div>
+      <div className={`${LABEL} mt-3`} style={{ fontFamily: F.mono, color: w.accent }}>
+        {rest.join(" ")}
+      </div>
+    </div>
+  );
+}
+
+function MoreWorkEntry({ w, reverse }: { w: AdditionalWork; reverse: boolean }) {
+  const media = WORK_MEDIA[w.id];
+  const visual = media ? (
+    <MediaSlot
+      media={media}
+      aspect="4 / 3"
+      rounded="rounded-xl"
+      sizes="(min-width: 1024px) 45vw, 100vw"
+    />
+  ) : (
+    <MetricFigure w={w} />
+  );
+  const hasVisual = !!(media || w.metric);
+  const hasDetails = !!(w.delivered?.length || w.purpose?.length);
+  const details = hasDetails ? (
+    <div className={`gap-10 ${hasVisual ? "grid md:grid-cols-2 lg:col-span-2" : "space-y-10"}`}>
+      {w.delivered?.length ? <Delivered p={{ delivered: w.delivered, accent: w.accent }} /> : null}
+      {w.purpose?.length ? <Purpose p={{ purpose: w.purpose, accent: w.accent }} /> : null}
+    </div>
+  ) : null;
+  return (
+    <li id={w.id} className="border-b border-white/10">
+      <Reveal
+        className={`grid gap-8 py-12 lg:gap-16 lg:py-16 ${
+          hasVisual ? "lg:grid-cols-2 lg:items-center" : "lg:grid-cols-[1.1fr_0.9fr]"
+        }`}
+      >
+        <div className={`space-y-8 ${reverse ? "lg:order-2" : ""}`}>
+          <MoreWorkHead w={w} />
+          {w.url && w.domain && <LiveLink p={{ url: w.url, domain: w.domain }} />}
+        </div>
+        {hasVisual && <div className={reverse ? "lg:order-1" : ""}>{visual}</div>}
+        {/* Without a visual, details take the second column; with one, they run beneath. */}
+        {details && <div className={hasVisual ? "lg:order-3 lg:col-span-2" : ""}>{details}</div>}
+      </Reveal>
+    </li>
+  );
+}
+
+function MoreWorkSection() {
+  return (
+    <section
+      id="more-work"
+      className="px-5 py-20 sm:px-8 lg:px-14 lg:py-28"
+      style={{ background: C.bg }}
+    >
+      <div className="mx-auto max-w-7xl">
+        <Reveal className="mb-10 lg:mb-14">
+          <Eyebrow color={C.yellow} line>
+            More work
+          </Eyebrow>
+          <p
+            className="max-w-2xl"
+            style={{ ...TYPE.h3, fontSize: "clamp(1.4rem,2.4vw,2rem)", color: C.text }}
+          >
+            Selected client work beyond our featured projects.
+          </p>
+        </Reveal>
+        <ol className="border-t border-white/10">
+          {ADDITIONAL_WORK.map((w, i) => (
+            <MoreWorkEntry key={w.id} w={w} reverse={i % 2 === 0 && i > 0} />
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
 export default function PortfolioPage() {
   const [grotta, eagleview, svf] = PROJECTS;
   return (
     <PageShell>
       <Seo
         title="Portfolio | TODO Growth"
-        description="TODO Growth projects in Rwanda: websites, content production, digital marketing, SEO, documentary video and 360° virtual tours for Grotta Resort, Eagleview Farm and Sustainable Villages Foundation."
+        description="TODO Growth projects in Rwanda: websites, content production, digital marketing, SEO, documentary video, 360° virtual tours and branding for Grotta Resort, Eagleview Farm, Sustainable Villages Foundation, NuttinTODO and more."
         path="/portfolio"
       />
 
@@ -336,7 +459,7 @@ export default function PortfolioPage() {
         eyebrow="Portfolio"
         title="Selected work."
         accent="Real projects in Rwanda."
-        intro="A resort, a retreat farm and a development foundation. Here is what we delivered for each of them."
+        intro="A resort, a retreat farm, a development foundation and more. Here is what we delivered for each of them."
       >
         <ol className="flex flex-wrap gap-x-8 gap-y-1">
           {PROJECTS.map((p) => (
@@ -352,12 +475,24 @@ export default function PortfolioPage() {
               </a>
             </li>
           ))}
+          <li>
+            <a
+              href="#more-work"
+              className="inline-flex min-h-[44px] items-baseline gap-2 text-[15px] text-white/60 transition-colors hover:text-[#E8C547]"
+            >
+              <span className={LABEL} style={{ fontFamily: F.mono, color: C.muted }}>
+                04–06
+              </span>
+              More work
+            </a>
+          </li>
         </ol>
       </PageHero>
 
       <GrottaSection p={grotta} />
       <EagleviewSection p={eagleview} />
       <SvfSection p={svf} />
+      <MoreWorkSection />
 
       <FinalCta
         variant="statement"

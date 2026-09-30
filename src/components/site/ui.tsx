@@ -385,7 +385,7 @@ export function MediaSlot({
   aspect = "16 / 10",
   className = "",
   imgClassName = "",
-  position = "center",
+  position,
   sizes = "(min-width: 1024px) 50vw, 100vw",
   priority = false,
   overlay = false,
@@ -427,6 +427,7 @@ export function MediaSlot({
   }, [inView, playVideo]);
 
   const animate = motion === "drift" && !reduced;
+  const objectPosition = position ?? media.focus ?? "center";
 
   return (
     <figure
@@ -438,7 +439,7 @@ export function MediaSlot({
         <video
           ref={videoRef}
           className={`absolute inset-0 h-full w-full object-cover ${imgClassName}`}
-          style={{ objectPosition: position }}
+          style={{ objectPosition }}
           poster={media.src}
           muted
           loop
@@ -459,7 +460,7 @@ export function MediaSlot({
           decoding="async"
           className={`absolute inset-0 h-full w-full object-cover ${animate ? "media-drift" : ""} ${imgClassName}`}
           style={{
-            objectPosition: position,
+            objectPosition,
             animationPlayState: animate && inView ? "running" : "paused",
           }}
         />
@@ -472,7 +473,7 @@ export function MediaSlot({
           }}
         />
       )}
-      {tag && media.status === "temporary" && (
+      {tag && media.status === "temporary" && media.tagged !== false && (
         <figcaption
           className={`absolute z-10 rounded-full ${TAG_POSITION[tagPosition]} px-2.5 py-1 text-[11px] tracking-[0.06em]`}
           style={{

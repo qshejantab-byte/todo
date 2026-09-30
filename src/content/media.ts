@@ -1,7 +1,7 @@
 // Media slots. Every image on the site is referenced through this registry, so a
 // temporary image can be replaced with a real TODO asset by editing one entry.
 //
-// status "real"      → TODO's own work or a screenshot of a site TODO built.
+// status "real"      → TODO's own work or photography, or a screenshot of a site TODO built.
 // status "temporary" → licensed development imagery (Unsplash License) used only
 //                      to establish layout. Rendered with an "Illustrative image"
 //                      tag so it is never presented as TODO's work.
@@ -9,20 +9,34 @@
 // To replace a temporary image: drop the new files into src/assets/media/,
 // import them below, update `src`/`srcSet`/`alt`, and set status to "real".
 
-import rwandaHills800 from "@/assets/media/temp/rwanda-hills-800.webp";
-import rwandaHills1600 from "@/assets/media/temp/rwanda-hills-1600.webp";
 import kigali800 from "@/assets/media/temp/kigali-skyline-800.webp";
 import kigali1600 from "@/assets/media/temp/kigali-skyline-1600.webp";
-import hospitality800 from "@/assets/media/temp/hospitality-view-800.webp";
-import hospitality1600 from "@/assets/media/temp/hospitality-view-1600.webp";
 import tourism800 from "@/assets/media/temp/tourism-gorilla-800.webp";
 import tourism1600 from "@/assets/media/temp/tourism-gorilla-1600.webp";
 import realestate800 from "@/assets/media/temp/realestate-hillside-800.webp";
 import realestate1600 from "@/assets/media/temp/realestate-hillside-1600.webp";
+import lenses800 from "@/assets/media/temp/camera-lenses-800.webp";
+import lenses1600 from "@/assets/media/temp/camera-lenses-1600.webp";
 import ruralRoad800 from "@/assets/media/temp/rural-road-800.webp";
 import ruralRoad1600 from "@/assets/media/temp/rural-road-1600.webp";
-import drone800 from "@/assets/media/temp/drone-800.webp";
-import drone1600 from "@/assets/media/temp/drone-1600.webp";
+
+// TODO studio photography. Originals (uncropped, full size) live in media-source/todo-studio/.
+import heroStudio800 from "@/assets/media/todo/hero/hero-studio-800.webp";
+import heroStudio1600 from "@/assets/media/todo/hero/hero-studio-1600.webp";
+import heroStudio2400 from "@/assets/media/todo/hero/hero-studio-2400.webp";
+import brandWall800 from "@/assets/media/todo/home/brand-wall-800.webp";
+import brandWall1539 from "@/assets/media/todo/home/brand-wall-1539.webp";
+import studioOffice800 from "@/assets/media/todo/about/studio-office-800.webp";
+import studioOffice1600 from "@/assets/media/todo/about/studio-office-1600.webp";
+import muralPanorama800 from "@/assets/media/todo/about/studio-mural-panorama-800.webp";
+import muralPanorama1600 from "@/assets/media/todo/about/studio-mural-panorama-1600.webp";
+import muralPanorama2400 from "@/assets/media/todo/about/studio-mural-panorama-2400.webp";
+import presentWorkstation800 from "@/assets/media/todo/services/present-workstation-800.webp";
+import presentWorkstation1600 from "@/assets/media/todo/services/present-workstation-1600.webp";
+
+// Grotta Resort pool photography (supplied September 2026). Original in media-source/grotta/.
+import grottaPool800 from "@/assets/media/todo/industries/grotta-pool-800.webp";
+import grottaPool1620 from "@/assets/media/todo/industries/grotta-pool-1620.webp";
 
 import grottaDesk720 from "@/assets/media/portfolio/grotta-desktop-720.webp";
 import grottaDesk1440 from "@/assets/media/portfolio/grotta-desktop-1440.webp";
@@ -46,6 +60,10 @@ export interface MediaAsset {
   /** Where the asset came from. Kept for licensing and replacement tracking. */
   source: string;
   video?: { src: string; type?: string };
+  /** false hides the "Illustrative image" tag on a temporary asset (status and source are kept). */
+  tagged?: boolean;
+  /** Default object-position (focal point) wherever the slot is cropped; a page can override it. */
+  focus?: string;
 }
 
 const pair = (small: string, large: string, smallW: number, largeW: number) => ({
@@ -56,70 +74,88 @@ const pair = (small: string, large: string, smallW: number, largeW: number) => (
 // Shared file sets. One file can back several slots; each slot keeps its own
 // entry below so it can be replaced independently.
 const FILES = {
-  rwandaHills: pair(rwandaHills800, rwandaHills1600, 800, 1600),
   kigali: pair(kigali800, kigali1600, 800, 1600),
-  drone: pair(drone800, drone1600, 800, 1600),
-  valley: pair(hospitality800, hospitality1600, 800, 1600),
   gorilla: pair(tourism800, tourism1600, 800, 1600),
   hillsideBuilding: pair(realestate800, realestate1600, 800, 1600),
   ruralRoad: pair(ruralRoad800, ruralRoad1600, 800, 1600),
 };
 
 const UNSPLASH = {
-  rwandaHills: "Unsplash, Tobias Doering (kcNCqCEdwi8)",
   kigali: "Unsplash, Jean Claude Akarikumutima (b-HnOOPRfTI)",
-  drone: "Unsplash, Jason Mavrommatis (XYrjl3j7smo)",
-  valley: "Unsplash, Protais Benjamin Mugenzi (f8vDOEq4Qvk)",
   gorilla: "Unsplash, Magdalena Kula Manchee (-FezT2WMZr4)",
   hillsideBuilding: "Unsplash, Tamrat Touloumon (-2CWrKkR-GA)",
   ruralRoad: "Unsplash, Tobias Doering (1ihYfuwRZds)",
+  lenses: "Unsplash, Hunter Moranville (tyV5vXni8lk)",
 };
 
+const STUDIO = "TODO Growth studio photography (supplied September 2026)";
+
 export const MEDIA = {
-  // ── Atmosphere (temporary) ──────────────────────────────────────────────────
-  // Home hero layer behind the diagram. Built as a video slot: add
-  // `video: { src: heroVideo }` (muted loop) to switch to real TODO footage.
+  // ── Atmosphere ──────────────────────────────────────────────────────────────
+  // Home hero layer behind the diagram: the full studio frame (office-1), centred, with the
+  // TODO mural visible on the back wall. Still a video slot: add `video: { src }` for a muted loop.
   heroAmbient: {
     kind: "image",
-    ...FILES.rwandaHills,
+    src: heroStudio1600,
+    srcSet: `${heroStudio800} 800w, ${heroStudio1600} 1600w, ${heroStudio2400} 2400w`,
     alt: "",
-    status: "temporary",
+    status: "real",
     category: "atmosphere",
-    source: UNSPLASH.rwandaHills,
+    source: STUDIO,
   },
-  kigaliSkyline: {
+  // Home "Who we are": the TODO.RW wall close up (the hero already shows the whole studio).
+  // Held left of centre so the logo and the plant both survive the near-square desktop crop.
+  whoWeAre: {
     kind: "image",
-    ...FILES.kigali,
-    alt: "Kigali skyline at sunset",
-    status: "temporary",
+    ...pair(brandWall800, brandWall1539, 800, 1539),
+    alt: "The TODO.RW Build Brand Grow sign on the studio wall, beside a plant",
+    status: "real",
     category: "atmosphere",
-    source: UNSPLASH.kigali,
+    source: "Supplied by TODO Growth (Colorful TODO.RW Brand Wall.png, September 2026)",
+    focus: "30% center",
+  },
+  // About lead image until a team photo exists (OPTIONAL_MEDIA.team takes priority).
+  // The studio from the edit desks (office6): TODO mural at the back, values wall on the right.
+  // Held right so the whole values wall stays in the 4:5 frame.
+  aboutLead: {
+    kind: "image",
+    ...pair(studioOffice800, studioOffice1600, 800, 1600),
+    alt: "The TODO Growth studio, with the TODO mural and the Focus, Create, Solve, Impact wall",
+    status: "real",
+    category: "atmosphere",
+    source: STUDIO,
+    focus: "100% center",
   },
   aboutBand: {
     kind: "image",
-    ...FILES.rwandaHills,
-    alt: "Green hills in Rwanda under a cloudy sky",
-    status: "temporary",
+    src: muralPanorama1600,
+    srcSet: `${muralPanorama800} 800w, ${muralPanorama1600} 1600w, ${muralPanorama2400} 2400w`,
+    alt: "The TODO mural, Build Brand Grow, lit by spotlights in the studio",
+    status: "real",
     category: "atmosphere",
-    source: UNSPLASH.rwandaHills,
+    source: STUDIO,
   },
 
-  // ── Services: one editorial image per stage chapter (temporary) ─────────────
+  // ── Services: one editorial image per stage chapter ──────────────────────────
   stagePresent: {
     kind: "image",
-    ...FILES.hillsideBuilding,
-    alt: "A modern building on a green hillside",
-    status: "temporary",
+    ...pair(presentWorkstation800, presentWorkstation1600, 800, 1600),
+    alt: "A TODO Growth workstation, with the TODO logo on a laptop between two monitors",
+    status: "real",
     category: "service",
-    source: UNSPLASH.hillsideBuilding,
+    source: STUDIO,
+    // Desktop crops this to 4:3: hold the laptop and right-hand monitor.
+    focus: "62% center",
   },
+  // Stock (Unsplash License): camera lenses for content production. Tag hidden on request.
   stageAttract: {
     kind: "image",
-    ...FILES.drone,
-    alt: "A camera drone in flight over a forest",
+    ...pair(lenses800, lenses1600, 800, 1600),
+    alt: "Camera lenses grouped on a wooden table",
     status: "temporary",
     category: "service",
-    source: UNSPLASH.drone,
+    source: UNSPLASH.lenses,
+    tagged: false,
   },
 
   // ── Packages: one narrow strip per package (temporary) ──────────────────────
@@ -141,21 +177,23 @@ export const MEDIA = {
   },
   packageHospitality: {
     kind: "image",
-    ...FILES.valley,
-    alt: "A green valley seen from a hillside property",
-    status: "temporary",
+    ...pair(grottaPool800, grottaPool1620, 800, 1620),
+    alt: "The Grotta Resort pool seen from inside the cave, with the resort building beyond",
+    status: "real",
     category: "package",
-    source: UNSPLASH.valley,
+    source: "Grotta Resort photography supplied by TODO Growth (September 2026)",
+    focus: "70% center",
   },
 
   // ── Industries (temporary) ──────────────────────────────────────────────────
   hospitality: {
     kind: "image",
-    ...FILES.valley,
-    alt: "A green valley seen from a hillside property",
-    status: "temporary",
+    ...pair(grottaPool800, grottaPool1620, 800, 1620),
+    alt: "The Grotta Resort pool seen from inside the cave, with the resort building beyond",
+    status: "real",
     category: "industry",
-    source: UNSPLASH.valley,
+    source: "Grotta Resort photography supplied by TODO Growth (September 2026)",
+    focus: "70% center",
   },
   tourism: {
     kind: "image",
@@ -164,6 +202,7 @@ export const MEDIA = {
     status: "temporary",
     category: "industry",
     source: UNSPLASH.gorilla,
+    tagged: false,
   },
   realestate: {
     kind: "image",
@@ -172,6 +211,7 @@ export const MEDIA = {
     status: "temporary",
     category: "industry",
     source: UNSPLASH.hillsideBuilding,
+    tagged: false,
   },
 
   // ── Portfolio (real: screenshots of sites TODO built) ───────────────────────
@@ -254,3 +294,8 @@ export const PROJECT_MEDIA: Record<
   "eagleview-farm": [],
   "sustainable-villages-foundation": [],
 };
+
+// Real media for "More work" entries (see ADDITIONAL_WORK), keyed by entry id.
+// Empty until approved assets exist; each entry shows its image once added.
+// Never temporary or client-website imagery presented as TODO's work.
+export const WORK_MEDIA: Partial<Record<string, MediaAsset>> = {};

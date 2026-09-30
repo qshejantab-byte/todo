@@ -72,7 +72,7 @@ export default function AboutPage() {
         intro={`${COMPANY.legalName} is a growth, commercialization and digital transformation company. ${COMPANY.geography} We help businesses present themselves clearly, attract the right customers, turn interest into revenue and run more efficiently.`}
         aside={
           <MediaSlot
-            media={team ?? MEDIA.kigaliSkyline}
+            media={team ?? MEDIA.aboutLead}
             aspect="4 / 5"
             sizes="(min-width: 1024px) 35vw, 100vw"
             priority

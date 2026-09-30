@@ -38,9 +38,12 @@ const INDUSTRY_MEDIA = {
   tourism: "tourism",
   realestate: "realestate",
 } as const;
-// Eased fade at both edges of the mobile media band so it dissolves into the hero.
-const BAND_MASK =
-  "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.25) 12%, rgba(0,0,0,0.7) 24%, #000 36%, #000 58%, rgba(0,0,0,0.7) 72%, rgba(0,0,0,0.25) 86%, transparent 100%)";
+// Mobile hero shading over the full-bleed image: dark behind the type, clearer
+// around the diagram, dark again at the CTA, with a soft edge vignette.
+const MOBILE_HERO_SHADE = [
+  "radial-gradient(120% 70% at 50% 62%, rgba(11,13,23,0) 45%, rgba(11,13,23,0.6) 100%)",
+  "linear-gradient(180deg, rgba(11,13,23,0.94) 0%, rgba(11,13,23,0.82) 30%, rgba(11,13,23,0.74) 47%, rgba(11,13,23,0.32) 58%, rgba(11,13,23,0.3) 70%, rgba(11,13,23,0.78) 84%, rgb(11,13,23) 100%)",
+].join(", ");
 const STAGE_ORDER = [
   "branding",
   "websites",
@@ -68,6 +71,21 @@ export default function HomePage() {
         className="relative overflow-hidden px-5 sm:px-8 lg:px-14"
         style={{ background: C.bg }}
       >
+        {/* Mobile: full-bleed atmosphere behind the whole hero. Replaceable slot: MEDIA.heroAmbient. */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 md:hidden">
+          <MediaSlot
+            media={MEDIA.heroAmbient}
+            fill
+            rounded="rounded-none"
+            priority
+            sizes="100vw"
+            position="center"
+            imgClassName="opacity-[0.62]"
+            tag={false}
+          />
+          <div className="absolute inset-0" style={{ background: MOBILE_HERO_SHADE }} />
+        </div>
+
         {/* Atmosphere behind the diagram (desktop). Replaceable slot: MEDIA.heroAmbient. */}
         <div
           aria-hidden="true"
@@ -135,7 +153,7 @@ export default function HomePage() {
             </ul>
 
             <p
-              className="anim-up relative z-10 order-4 mt-3 max-w-xl text-[15px] leading-[26px] md:mb-9 md:mt-0 md:text-[17px] md:leading-8"
+              className="anim-up hidden max-w-xl md:mb-9 md:block md:text-[17px] md:leading-8"
               style={{ animationDelay: "0.2s", color: C.body }}
             >
               We help businesses grow, commercialize and transform through practical digital
@@ -143,55 +161,26 @@ export default function HomePage() {
               efficiency.
             </p>
 
-            {/* ── Mobile: atmosphere + compact signature diagram ── */}
+            {/* ── Mobile: compact signature diagram, set directly on the full-bleed atmosphere ── */}
             <div
-              className="anim-up relative order-5 -mx-5 -mt-8 h-[244px] sm:-mx-8 md:hidden"
+              className="anim-up relative order-5 my-7 flex justify-center md:hidden"
               style={{ animationDelay: "0.18s" }}
             >
-              {/* Atmosphere fades in and out at both edges, so it reads as part of the hero. */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0"
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[190px] w-[190px] -translate-x-1/2 -translate-y-1/2 rounded-full"
                 style={{
-                  maskImage: BAND_MASK,
-                  WebkitMaskImage: BAND_MASK,
+                  background:
+                    "radial-gradient(closest-side, rgba(11,13,23,0.6) 0%, rgba(11,13,23,0) 100%)",
                 }}
-              >
-                <MediaSlot
-                  media={MEDIA.heroAmbient}
-                  fill
-                  rounded="rounded-none"
-                  sizes="100vw"
-                  position="center 65%"
-                  imgClassName="opacity-[0.46]"
-                  tag={false}
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "radial-gradient(34% 48% at 50% 50%, rgba(11,13,23,0.72) 0%, rgba(11,13,23,0) 100%), linear-gradient(90deg, rgba(11,13,23,0.6) 0%, rgba(11,13,23,0) 24%, rgba(11,13,23,0) 76%, rgba(11,13,23,0.6) 100%)",
-                  }}
-                />
+              />
+              <div className="relative h-[256px] w-[256px]">
+                <GrowthDiagram compact />
               </div>
-              <div className="relative mx-auto flex h-full w-[236px] items-center">
-                <div className="h-[236px] w-[236px]">
-                  <GrowthDiagram compact />
-                </div>
-              </div>
-              {/* Discreet temporary-media note; disappears once a real asset is set. */}
-              {MEDIA.heroAmbient.status === "temporary" && (
-                <span
-                  className="absolute right-2 top-1/2 origin-center translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[9px] uppercase tracking-[0.14em]"
-                  style={{ fontFamily: F.mono, color: "rgba(245,245,240,0.28)" }}
-                >
-                  Illustrative image
-                </span>
-              )}
             </div>
 
             {/* ── Mobile CTA: primary dominant, secondary as an editorial link ── */}
-            <div className="anim-up order-6 mt-1 md:hidden" style={{ animationDelay: "0.24s" }}>
+            <div className="anim-up order-6 md:hidden" style={{ animationDelay: "0.24s" }}>
               <Cta to="/discovery" className="w-full">
                 Book a Discovery Call
               </Cta>
@@ -214,7 +203,7 @@ export default function HomePage() {
             </div>
 
             <p
-              className="anim-up order-7 mt-4 max-w-md border-l-2 pl-4 text-sm leading-6 md:mt-7"
+              className="anim-up hidden max-w-md border-l-2 pl-4 text-sm leading-6 md:mt-7 md:block"
               style={{ animationDelay: "0.32s", color: C.muted, borderColor: C.yellow }}
             >
               No long consulting engagements. Just clear solutions designed to deliver measurable
@@ -263,7 +252,7 @@ export default function HomePage() {
         <div className="grid lg:grid-cols-2">
           <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[560px]">
             <MediaSlot
-              media={MEDIA.kigaliSkyline}
+              media={MEDIA.whoWeAre}
               fill
               rounded="rounded-none"
               sizes="(min-width: 1024px) 50vw, 100vw"
